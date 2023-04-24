@@ -41,4 +41,10 @@ public class DemoRepositoryImpl implements DemoRepository {
         String sql = "INSERT INTO DEMO(ID,NAME,AGE) VALUES ('"+ person.getId()+"','"+person.getFullName()+"','"+person.getAge()+"')";
         jdbcTemplate.execute(sql);
     }
+
+    @Override
+    public void deletePerson(int id) {
+        String sql ="DELETE FROM DEMO WHERE ID="+id;
+        jdbcTemplate.execute(sql);
+    }
 }

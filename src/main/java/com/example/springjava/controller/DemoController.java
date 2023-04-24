@@ -13,11 +13,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 
 @RestController
 public class DemoController {
-
-
     @Autowired
     private DemoService demoService;
 
@@ -45,5 +45,17 @@ public class DemoController {
             throw new BadRequestException(e.toString());
         }
         return ResponseEntity.ok(new ApiResponse<NullValue>(true, 200, "SUCCESS", null));
+    }
+
+    @PostMapping(value = "/delete")
+    public ResponseEntity<ApiResponse<String>> deletePerson(@RequestBody(required = true)Map<String , Integer> payload){
+        try {
+            demoService.deletePerson( payload.get("id"));
+        }
+        catch (Exception e)
+        {
+            throw  new BadRequestException(e.toString());
+        }
+        return ResponseEntity.ok(new ApiResponse<String>(true,200,"success","You was deleted "));
     }
 }

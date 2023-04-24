@@ -24,4 +24,9 @@ public class DemoServiceImpl implements DemoService {
     public void addPerson(Person person) {
         demoRepository.addPerson(person);
     }
+
+    @Override
+    public void deletePerson(int id) {
+        demoRepository.deletePerson(id);
+    }
 }
