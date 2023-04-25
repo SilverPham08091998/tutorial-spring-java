@@ -4,7 +4,7 @@ public class Person {
     public String fullName;
     public int age;
     public int id;
-
+    
     public String getFullName() {
         return fullName;
     }
