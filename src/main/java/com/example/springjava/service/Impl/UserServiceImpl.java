@@ -43,7 +43,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void updateUser() {
-
+    public void updateUser(UserDTO userDTO, String userId) {
+        userRepository.updateUserEntityByUserId(userDTO, userId);
     }
 }

@@ -24,6 +24,8 @@ public class ConvertUserDTO implements Convert<UserEntity, UserDTO> {
                 .age(userEntity.getAge())
                 .job(userEntity.getJob())
                 .relation(userEntity.getRelation())
+                .createDate(userEntity.getCreateDate())
+                .userId(userEntity.getUserId().toString())
                 .build();
     }
 }

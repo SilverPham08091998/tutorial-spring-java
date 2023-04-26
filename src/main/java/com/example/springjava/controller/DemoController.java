@@ -1,6 +1,5 @@
 package com.example.springjava.controller;
 
-import com.example.springjava.exception.BadRequestException;
 import com.example.springjava.model.Person;
 import com.example.springjava.payload.ApiResponse;
 import com.example.springjava.service.DemoService;
@@ -14,7 +13,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 
 @RestController
 public class DemoController {
@@ -42,20 +40,16 @@ public class DemoController {
             demoService.addPerson(person);
 
         } catch (Exception e) {
-            throw new BadRequestException(e.toString());
         }
         return ResponseEntity.ok(new ApiResponse<NullValue>(true, 200, "SUCCESS", null));
     }
 
     @PostMapping(value = "/delete")
-    public ResponseEntity<ApiResponse<String>> deletePerson(@RequestBody(required = true)Map<String , Integer> payload){
+    public ResponseEntity<ApiResponse<String>> deletePerson(@RequestBody(required = true) Map<String, Integer> payload) {
         try {
-            demoService.deletePerson( payload.get("id"));
+            demoService.deletePerson(payload.get("id"));
+        } catch (Exception e) {
         }
-        catch (Exception e)
-        {
-            throw  new BadRequestException(e.toString());
-        }
-        return ResponseEntity.ok(new ApiResponse<String>(true,200,"success","You was deleted "));
+        return ResponseEntity.ok(new ApiResponse<String>(true, 200, "success", "You was deleted "));
     }
 }

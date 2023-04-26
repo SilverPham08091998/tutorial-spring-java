@@ -8,6 +8,7 @@ import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
 import java.util.Date;
+import java.util.UUID;
 
 @Entity(name = "USER")
 @Table(name = "USER")
@@ -18,7 +19,7 @@ import java.util.Date;
 public class UserEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
-    @Column(name = "USER_ID", updatable = false, nullable = false)
+    @Column(name = "ID", updatable = false, nullable = false)
     private long id;
 
     @Column(name = "FULL_NAME")
@@ -40,4 +41,8 @@ public class UserEntity {
 
     @Column(name = "RELATION")
     private String relation;
+
+    @Column(name = "USER_ID", updatable = false)
+    private String userId = UUID.randomUUID().toString();
+
 }
