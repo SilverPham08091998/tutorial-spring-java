@@ -1,4 +1,4 @@
-package com.example.springjava.model.userdto;
+package com.example.springjava.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;

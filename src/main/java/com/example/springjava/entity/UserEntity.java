@@ -42,7 +42,7 @@ public class UserEntity {
     @Column(name = "RELATION")
     private String relation;
 
-    @Column(name = "USER_ID", updatable = false)
+    @Column(name = "USER_ID", unique = true)
     private String userId = UUID.randomUUID().toString();
 
 }

@@ -2,10 +2,10 @@ package com.example.springjava.controller;
 
 import com.example.springjava.entity.UserEntity;
 import com.example.springjava.exception.BadRequestException;
-import com.example.springjava.model.userdto.ConvertUserDTO;
-import com.example.springjava.model.userdto.UserDTO;
+import com.example.springjava.model.UserDTO;
 import com.example.springjava.payload.ApiResponse;
 import com.example.springjava.service.UserService;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,6 +13,8 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 
 @RestController
 @RequestMapping(value = "/user")
@@ -22,7 +24,7 @@ public class UserController {
     UserService userService;
 
     @Autowired
-    ConvertUserDTO convertUserDTO;
+    ModelMapper mapper;
 
     @PostMapping(value = "/create")
     @Transactional
@@ -32,7 +34,8 @@ public class UserController {
             throw new BadRequestException(String.valueOf(HttpStatus.BAD_REQUEST.value()), HttpStatus.BAD_REQUEST.getReasonPhrase(), BadRequestException.class.getTypeName(), "FullName, Address, Job is Empty");
         }
         try {
-            UserEntity userEntity = convertUserDTO.convertToEntity(user);
+            UserEntity userEntity = mapper.map(user, UserEntity.class);
+            userEntity.setUserId(UUID.randomUUID().toString());
             userService.createUser(userEntity);
 
         } catch (Exception e) {
@@ -58,5 +61,46 @@ public class UserController {
             throw new NullPointerException(e.toString());
         }
         return ResponseEntity.ok(new ApiResponse<>(true, 200, "success", userDTOList));
+    }
+
+    @PostMapping(value = "/update")
+    @Transactional
+    public ResponseEntity<ApiResponse<String>> updateUser(
+            @RequestBody(required = true) UserDTO userDTO
+    ) {
+        try {
+            userService.updateUser(userDTO.getUserId(), userDTO);
+        } catch (Exception e) {
+            throw new BadRequestException(String.valueOf(HttpStatus.BAD_REQUEST.value()), HttpStatus.BAD_REQUEST.getReasonPhrase(), BadRequestException.class.getTypeName(), "UserId is invalid");
+
+        }
+        return ResponseEntity.ok(new ApiResponse<>(true, 200, "success", "Update success"));
+    }
+
+    @PutMapping(value = "/update")
+    @Transactional
+    public ResponseEntity<ApiResponse<String>> updateFullNameUser(
+            @RequestBody(required = true) Map<String, Object> body
+    ) {
+        try {
+            userService.updateFullNameByUserId(body.get("userId").toString(), body.get("fullName").toString(), (int) body.get("age"));
+        } catch (Exception e) {
+            throw new BadRequestException(String.valueOf(HttpStatus.BAD_REQUEST.value()), HttpStatus.BAD_REQUEST.getReasonPhrase(), BadRequestException.class.getTypeName(), "UserId is invalid");
+
+        }
+        return ResponseEntity.ok(new ApiResponse<>(true, 200, "success", "Update Full Name success"));
+    }
+
+    @DeleteMapping(value = "/delete")
+    @Transactional
+    public ResponseEntity<ApiResponse<String>> deleteUser(
+            @RequestBody Map<String, String> userId
+    ) {
+        try {
+            userService.deleteUser(userId.get("userId"));
+        } catch (Exception e) {
+            throw new BadRequestException(String.valueOf(HttpStatus.BAD_REQUEST.value()), HttpStatus.BAD_REQUEST.getReasonPhrase(), BadRequestException.class.getTypeName(), "UserId is invalid");
+        }
+        return ResponseEntity.ok(new ApiResponse<>(true, 200, "success", "Delete success"));
     }
 }

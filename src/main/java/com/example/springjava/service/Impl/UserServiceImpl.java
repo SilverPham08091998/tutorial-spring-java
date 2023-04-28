@@ -1,10 +1,10 @@
 package com.example.springjava.service.Impl;
 
 import com.example.springjava.entity.UserEntity;
-import com.example.springjava.model.userdto.ConvertUserDTO;
-import com.example.springjava.model.userdto.UserDTO;
+import com.example.springjava.model.UserDTO;
 import com.example.springjava.respository.UserRepository;
 import com.example.springjava.service.UserService;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -18,8 +18,9 @@ public class UserServiceImpl implements UserService {
     @Autowired
     UserRepository userRepository;
 
+
     @Autowired
-    ConvertUserDTO convertUserDTO;
+    ModelMapper mapper;
 
     @Override
     public void createUser(UserEntity userEntity) {
@@ -37,13 +38,44 @@ public class UserServiceImpl implements UserService {
             userEntityList = userRepository.findByFullNameOrAddressOrJob(fullName, address, job);
         }
         for (UserEntity userEntity : userEntityList) {
-            userDTOList.add(convertUserDTO.convertToDTO(userEntity));
+            UserDTO userDTO = mapper.map(userEntity, UserDTO.class);
+            userDTOList.add(userDTO);
         }
         return userDTOList;
     }
 
     @Override
-    public void updateUser(UserDTO userDTO, String userId) {
-        userRepository.updateUserEntityByUserId(userDTO, userId);
+    public void updateFullNameByUserId(String userId, String fullName, int age) {
+        int responseCode = userRepository.updateFullNameUserId(userId, fullName, age);
+        if (responseCode == 0) {
+            throw new RuntimeException();
+
+        }
     }
+
+    @Override
+    public void updateUser(String userId, UserDTO userDTO) {
+        UserEntity userEntity = userRepository.findUserEntityByUserId(userId);
+        if (userEntity == null) {
+            throw new RuntimeException();
+        }
+        userEntity.setFullName(userDTO.getFullName());
+        userEntity.setJob(userDTO.getJob());
+        userEntity.setAge(userDTO.getAge());
+        userEntity.setAddress(userDTO.getAddress());
+        userEntity.setRelation(userDTO.getRelation());
+        userRepository.save(userEntity);
+    }
+
+
+    @Override
+    public void deleteUser(String userId) {
+
+        long res = userRepository.deleteByUserId(userId);
+        if (res == 0) {
+            throw new RuntimeException();
+        }
+    }
+
+
 }
