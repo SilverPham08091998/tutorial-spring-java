@@ -3,7 +3,7 @@ package com.example.springjava.controller;
 import com.example.springjava.entity.UserEntity;
 import com.example.springjava.exception.BadRequestException;
 import com.example.springjava.model.UserDTO;
-import com.example.springjava.payload.ApiResponse;
+import com.example.springjava.payload.response.ApiResponse;
 import com.example.springjava.service.UserService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,7 +28,7 @@ public class UserController {
 
     @PostMapping(value = "/create")
     @Transactional
-    public ResponseEntity<ApiResponse<String>> add(@RequestBody(required = true) UserDTO user) {
+    public ResponseEntity<ApiResponse<String>> add(@RequestBody UserDTO user) {
 
         if (user.getFullName().isEmpty() || user.getAddress().isEmpty() || user.getJob().isEmpty() || user.getAge() < 18) {
             throw new BadRequestException(String.valueOf(HttpStatus.BAD_REQUEST.value()), HttpStatus.BAD_REQUEST.getReasonPhrase(), BadRequestException.class.getTypeName(), "FullName, Address, Job is Empty");
@@ -39,7 +39,8 @@ public class UserController {
             userService.createUser(userEntity);
 
         } catch (Exception e) {
-            throw new BadRequestException(String.valueOf(e.hashCode()), e.getMessage(), e.getLocalizedMessage(), e.getClass().getName());
+            throw new BadRequestException(String.valueOf(HttpStatus.BAD_REQUEST.value()), HttpStatus.BAD_REQUEST.getReasonPhrase(), BadRequestException.class.getTypeName(), "Params (fullName,address,job) are null");
+
         }
         return ResponseEntity.ok(new ApiResponse<>(true, 200, "success", "It is created"));
     }
@@ -66,7 +67,7 @@ public class UserController {
     @PostMapping(value = "/update")
     @Transactional
     public ResponseEntity<ApiResponse<String>> updateUser(
-            @RequestBody(required = true) UserDTO userDTO
+            @RequestBody UserDTO userDTO
     ) {
         try {
             userService.updateUser(userDTO.getUserId(), userDTO);
@@ -80,7 +81,7 @@ public class UserController {
     @PutMapping(value = "/update")
     @Transactional
     public ResponseEntity<ApiResponse<String>> updateFullNameUser(
-            @RequestBody(required = true) Map<String, Object> body
+            @RequestBody Map<String, Object> body
     ) {
         try {
             userService.updateFullNameByUserId(body.get("userId").toString(), body.get("fullName").toString(), (int) body.get("age"));

@@ -8,7 +8,6 @@ import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
 import java.util.Date;
-import java.util.UUID;
 
 @Entity(name = "USER")
 @Table(name = "USER")
@@ -17,10 +16,9 @@ import java.util.UUID;
 @AllArgsConstructor
 @Builder
 public class UserEntity {
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
-    @Column(name = "ID", updatable = false, nullable = false)
-    private long id;
+    @Column(name = "USER_ID", updatable = false, nullable = false)
+    private String userId;
 
     @Column(name = "FULL_NAME")
     private String fullName;
@@ -29,7 +27,6 @@ public class UserEntity {
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "CREATE_DATE")
     private Date createDate;
-
 
     @Column(name = "ADDRESS")
     private String address;
@@ -42,7 +39,29 @@ public class UserEntity {
     @Column(name = "RELATION")
     private String relation;
 
-    @Column(name = "USER_ID", unique = true)
-    private String userId = UUID.randomUUID().toString();
+    @Column(name = "ROLE", length = 64)
+    private String role;
 
+    @CreationTimestamp
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "MODIFIED_DATE")
+    private Date modifiedDate;
+
+    @Column(name = "TITLE_POSITION")
+    private String titlePosition;
+
+    @Column(name = "PHONE_NUMBER")
+    private String phoneNumber;
+
+    @Column(name = "EMAIL")
+    private String email;
+
+    @Column(name = "ID_CARD", unique = true)
+    private String idCard;
+
+    @Column(name = "DATE_OF_BIRTH")
+    private String dateOfBirth;
+
+    @Column(name = "EXPERIED_DATE")
+    private String experiedDate;
 }

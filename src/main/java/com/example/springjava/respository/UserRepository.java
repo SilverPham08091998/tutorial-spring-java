@@ -8,8 +8,8 @@ import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 
-public interface UserRepository extends JpaRepository<UserEntity, Long> {
-    @Query(value = "select user from USER user where user.address like %:address% and user.fullName like %:fullName% and user.job like %:job%", nativeQuery = false)
+public interface UserRepository extends JpaRepository<UserEntity, String> {
+    @Query(value = "select user from USER user where user.address like %:address% and user.fullName like %:fullName% and user.job like %:job%")
     List<UserEntity> findByFullNameOrAddressOrJob(String fullName, String address, String job);
 
     @Modifying(clearAutomatically = true, flushAutomatically = true)
@@ -19,4 +19,6 @@ public interface UserRepository extends JpaRepository<UserEntity, Long> {
     long deleteByUserId(String userId);
 
     UserEntity findUserEntityByUserId(String userId);
+
+    boolean existsByIdCard(String idCard);
 }

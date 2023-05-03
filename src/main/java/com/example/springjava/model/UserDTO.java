@@ -13,6 +13,8 @@ import java.util.Date;
 @NoArgsConstructor
 @AllArgsConstructor
 public class UserDTO {
+    @JsonProperty(value = "userId")
+    private String userId;
     @JsonProperty(value = "fullName")
     private String fullName;
 
@@ -31,7 +33,28 @@ public class UserDTO {
     @JsonProperty(value = "createDate")
     private Date createDate;
 
-    @JsonProperty(value = "userId")
-    private String userId;
+    @JsonProperty(value = "role")
+    private String role;
+
+    @JsonProperty(value = "modifiedDate")
+    private String modifiedDate;
+
+    @JsonProperty(value = "titlePosition")
+    private String titlePosition;
+
+    @JsonProperty(value = "phoneNumber")
+    private String phoneNumber;
+
+    @JsonProperty(value = "email")
+    private String email;
+
+    @JsonProperty(value = "idCard")
+    private String idCard;
+
+    @JsonProperty(value = "dateOfBirth")
+    private String dateOfBirth;
+
+    @JsonProperty(value = "experiedDate")
+    private String experiedDate;
 
 }
