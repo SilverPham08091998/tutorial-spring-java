@@ -4,8 +4,8 @@ package com.example.springjava.controller;
 import com.example.springjava.exception.BadRequestException;
 import com.example.springjava.model.AuthenciationDTO;
 import com.example.springjava.model.UserDTO;
-import com.example.springjava.payload.request.AuthenciationPayload;
-import com.example.springjava.payload.request.SignInRequest;
+import com.example.springjava.payload.request.SignInPayload;
+import com.example.springjava.payload.request.SignUpPayload;
 import com.example.springjava.payload.response.ApiResponse;
 import com.example.springjava.payload.response.AuthResponse;
 import com.example.springjava.security.JwtTokenProvider;
@@ -55,7 +55,7 @@ public class AuthenciationController {
     @PostMapping(value = "/sign-up")
     public ResponseEntity<ApiResponse<AuthResponse>> signUpAccount(
             HttpServletRequest request,
-            @RequestBody AuthenciationPayload authenciationPayload) {
+            @RequestBody SignUpPayload authenciationPayload) {
         AuthenciationDTO authenciationDTO = authenciationPayload.getAuthenciationDTO();
         UserDTO userDTO = authenciationPayload.getUserDTO();
 
@@ -80,9 +80,9 @@ public class AuthenciationController {
 
 
     @PostMapping(value = "/sign-in")
-    public ResponseEntity<ApiResponse<AuthResponse>> signIn(@RequestBody SignInRequest request) throws AuthenticationException {
+    public ResponseEntity<ApiResponse<AuthResponse>> signIn(@RequestBody SignInPayload request) throws AuthenticationException {
         try {
-            UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(request.getUsername(), passwordEncoder.encode(request.getPassword()));
+            UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword());
             Authentication authentication = authenticationManager.authenticate(token);
             SecurityContextHolder.getContext().setAuthentication(authentication);
             return ResponseEntity.ok(new ApiResponse<>(true, 200, "success", jwtTokenProvider.createAuthResponse(authentication)));

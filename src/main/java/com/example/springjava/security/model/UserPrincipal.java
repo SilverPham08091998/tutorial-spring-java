@@ -21,7 +21,6 @@ public class UserPrincipal implements UserDetails {
     private Collection<? extends GrantedAuthority> authorities;
     private String userId;
     private String role;
-    private String idCard;
     private String phoneNumber;
     private String email;
 
@@ -37,7 +36,6 @@ public class UserPrincipal implements UserDetails {
                 authorities,
                 user.getUserId(),
                 user.getRole(),
-                user.getIdCard(),
                 user.getPhoneNumber(),
                 user.getEmail()
 

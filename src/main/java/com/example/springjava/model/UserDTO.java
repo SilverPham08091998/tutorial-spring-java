@@ -6,15 +6,12 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.Date;
-
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
 public class UserDTO {
-    @JsonProperty(value = "userId")
-    private String userId;
+
     @JsonProperty(value = "fullName")
     private String fullName;
 
@@ -29,15 +26,6 @@ public class UserDTO {
 
     @JsonProperty(value = "job")
     private String job;
-
-    @JsonProperty(value = "createDate")
-    private Date createDate;
-
-    @JsonProperty(value = "role")
-    private String role;
-
-    @JsonProperty(value = "modifiedDate")
-    private String modifiedDate;
 
     @JsonProperty(value = "titlePosition")
     private String titlePosition;

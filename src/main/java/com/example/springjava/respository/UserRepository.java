@@ -8,17 +8,17 @@ import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 
-public interface UserRepository extends JpaRepository<UserEntity, String> {
-    @Query(value = "select user from USER user where user.address like %:address% and user.fullName like %:fullName% and user.job like %:job%")
+public interface UserRepository extends JpaRepository<UserEntity, Long> {
+    @Query(value = "select user from USER_PROFILE user where user.address like %:address% and user.fullName like %:fullName% and user.job like %:job%")
     List<UserEntity> findByFullNameOrAddressOrJob(String fullName, String address, String job);
 
     @Modifying(clearAutomatically = true, flushAutomatically = true)
-    @Query("update USER user SET  user.fullName = :fullName, user.age =:age  WHERE user.userId = :userId")
+    @Query("update USER_PROFILE user SET  user.fullName = :fullName, user.age =:age  WHERE user.authenciationEntity.userId = :userId")
     int updateFullNameUserId(@Param(value = "userId") String userId, @Param(value = "fullName") String fullName, @Param(value = "age") int age);
 
-    long deleteByUserId(String userId);
+    long deleteByAuthenciationEntity_UserId(String userId);
 
-    UserEntity findUserEntityByUserId(String userId);
+    UserEntity findUserEntityByAuthenciationEntity_UserId(String userId);
 
     boolean existsByIdCard(String idCard);
 }

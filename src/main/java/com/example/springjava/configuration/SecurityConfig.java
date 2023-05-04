@@ -1,6 +1,5 @@
 package com.example.springjava.configuration;
 
-import com.example.springjava.security.JwtAccessDeniedHandler;
 import com.example.springjava.security.JwtAuthenticationEntryPoint;
 import com.example.springjava.security.JwtAuthenticationFilter;
 import com.example.springjava.security.service.CustomUserDetailServiceImpl;
@@ -45,6 +44,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.cors().and().csrf().disable()
+                .formLogin().disable()
                 .authorizeRequests()
                 .antMatchers("/auth/**")
                 .permitAll()
@@ -61,12 +61,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
         auth.userDetailsService(userDetailServiceImpl).passwordEncoder(passwordEncoder());
-    }
-
-
-    @Bean
-    public JwtAccessDeniedHandler accessDeniedHandler() {
-        return new JwtAccessDeniedHandler();
     }
 
     @Override

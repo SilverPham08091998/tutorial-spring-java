@@ -1,26 +1,24 @@
 package com.example.springjava.exception;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
-import java.text.MessageFormat;
-
+@EqualsAndHashCode(callSuper = true)
 @ResponseStatus(HttpStatus.UNAUTHORIZED)
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class UnauthorizedException extends RuntimeException {
-    /**
-     *
-     */
+    public static final Logger logger = LogManager.getLogger(UnauthorizedException.class);
     private static final long serialVersionUID = 7664785096389091489L;
-    private static final Logger logger = LoggerFactory.getLogger(UnauthorizedException.class);
-
-    public UnauthorizedException(String message) {
-        super(message);
-        logger.info(MessageFormat.format("UnauthorizedException message: {0}", message));
-    }
-
-    public UnauthorizedException(String message, Throwable cause) {
-        super(message, cause);
-    }
+    private String status;
+    private String error;
+    private String message;
+    private String path;
 }

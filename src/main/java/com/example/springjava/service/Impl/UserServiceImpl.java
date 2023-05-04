@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 
@@ -21,11 +22,6 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     ModelMapper mapper;
-
-    @Override
-    public void createUser(UserEntity userEntity) {
-        userRepository.save(userEntity);
-    }
 
     @Override
     public List<UserDTO> getListUser(String fullName, String address, String job) {
@@ -54,7 +50,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void updateUser(String userId, UserDTO userDTO) {
-        UserEntity userEntity = userRepository.findUserEntityByUserId(userId);
+        UserEntity userEntity = userRepository.findUserEntityByAuthenciationEntity_UserId(userId);
         if (userEntity == null) {
             throw new RuntimeException();
         }
@@ -63,6 +59,8 @@ public class UserServiceImpl implements UserService {
         userEntity.setAge(userDTO.getAge());
         userEntity.setAddress(userDTO.getAddress());
         userEntity.setRelation(userDTO.getRelation());
+        userEntity.setTitlePosition(userDTO.getTitlePosition());
+        userEntity.setModifiedDate(new Date());
         userRepository.save(userEntity);
     }
 
@@ -70,7 +68,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public void deleteUser(String userId) {
 
-        long res = userRepository.deleteByUserId(userId);
+        long res = userRepository.deleteByAuthenciationEntity_UserId(userId);
         if (res == 0) {
             throw new RuntimeException();
         }

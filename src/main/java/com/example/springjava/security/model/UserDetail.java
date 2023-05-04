@@ -16,7 +16,6 @@ public class UserDetail {
     private String username;
     private String password;
     private String role;
-    private String idCard;
     private String phoneNumber;
     private String email;
 }

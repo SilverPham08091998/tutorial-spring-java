@@ -25,14 +25,17 @@ public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint {
             httpServletResponse.sendError(HttpServletResponse.SC_NON_AUTHORITATIVE_INFORMATION,
                     e.getLocalizedMessage());
             logger.error("SC_NON_AUTHORITATIVE_INFORMATION Responding with unauthorized error. Message - {}", e.getMessage());
-        } else if (e instanceof DisabledException) {
+            return;
+        }
+        if (e instanceof DisabledException) {
             httpServletResponse.sendError(HttpServletResponse.SC_FORBIDDEN,
                     e.getLocalizedMessage());
             logger.error("SC_FORBIDDEN Responding with unauthorized error. Message - {}", e.getMessage());
-        } else {
-            httpServletResponse.sendError(HttpServletResponse.SC_UNAUTHORIZED,
-                    e.getLocalizedMessage());
-            logger.error("SC_UNAUTHORIZED Responding with unauthorized error. Message - {}", e.getMessage());
+            return;
         }
+        httpServletResponse.sendError(HttpServletResponse.SC_UNAUTHORIZED,
+                e.getLocalizedMessage());
+        logger.error("SC_UNAUTHORIZED Responding with unauthorized error. Message - {}", e.getMessage());
+
     }
 }

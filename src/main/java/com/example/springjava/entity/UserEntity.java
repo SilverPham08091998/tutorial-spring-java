@@ -1,24 +1,23 @@
 package com.example.springjava.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
 import java.util.Date;
 
-@Entity(name = "USER")
-@Table(name = "USER")
-@Data
+@Entity(name = "USER_PROFILE")
+@Table(name = "USER_PROFILE")
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
 public class UserEntity {
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
-    @Column(name = "USER_ID", updatable = false, nullable = false)
-    private String userId;
+    @Column(name = "PROFILE_ID", updatable = false, nullable = false)
+    private Long profileId;
 
     @Column(name = "FULL_NAME")
     private String fullName;
@@ -33,14 +32,12 @@ public class UserEntity {
 
     @Column(name = "AGE")
     private int age;
+
     @Column(name = "JOB")
     private String job;
 
     @Column(name = "RELATION")
     private String relation;
-
-    @Column(name = "ROLE", length = 64)
-    private String role;
 
     @CreationTimestamp
     @Temporal(TemporalType.TIMESTAMP)
@@ -64,4 +61,9 @@ public class UserEntity {
 
     @Column(name = "EXPERIED_DATE")
     private String experiedDate;
+
+    @OneToOne
+    @JoinColumn(name = "USER_ID")
+    private AuthenciationEntity authenciationEntity;
+
 }

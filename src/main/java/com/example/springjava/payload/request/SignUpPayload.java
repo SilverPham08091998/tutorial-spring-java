@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class AuthenciationPayload {
+public class SignUpPayload {
 
     AuthenciationDTO authenciationDTO;
 

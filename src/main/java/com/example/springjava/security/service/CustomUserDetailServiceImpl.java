@@ -1,7 +1,6 @@
 package com.example.springjava.security.service;
 
 import com.example.springjava.entity.AuthenciationEntity;
-import com.example.springjava.entity.UserEntity;
 import com.example.springjava.respository.AuthenciationRepository;
 import com.example.springjava.respository.UserRepository;
 import com.example.springjava.security.model.UserDetail;
@@ -39,17 +38,16 @@ public class CustomUserDetailServiceImpl implements UserDetailsService {
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         try {
             AuthenciationEntity authenciation = authenciationRepository.findAuthenciationEntityByUsername(username);
-            UserEntity user = userRepository.findUserEntityByUserId(authenciation.getUserId());
             UserDetail userDetail = new UserDetail(
-                    user.getUserId(),
+                    authenciation.getUserId(),
                     authenciation.getUsername(),
                     authenciation.getPassword(),
-                    user.getRole(),
-                    user.getIdCard(),
-                    user.getPhoneNumber(),
-                    user.getEmail()
+                    authenciation.getRole(),
+                    authenciation.getPhoneNumber(),
+                    authenciation.getEmail()
             );
             return UserPrincipal.create(userDetail);
+
         } catch (Exception e) {
             logger.info("Username {} is not found.", username);
             throw new UsernameNotFoundException("User not found with username : " + username);

@@ -1,27 +1,26 @@
 package com.example.springjava.entity;
 
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
+import java.util.Date;
+import java.util.UUID;
 
 @Entity(name = "AUTHENCIATION")
 @Table(name = "AUTHENCIATION")
-@Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Getter
+@Setter
 @Builder
 public class AuthenciationEntity {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id", nullable = false)
-    private Long id;
+    @Column(name = "USER_ID", nullable = false)
+    private String userId = UUID.randomUUID().toString();
 
-
-    @Column(name = "USERNAME", unique = true)
+    @Column(name = "USERNAME")
     private String username;
 
     @Column(name = "PASSWORD")
@@ -39,9 +38,21 @@ public class AuthenciationEntity {
     @Column(name = "PLATFORM")
     private String platform;
 
-    @Column(name = "AUTHENCIATION_DATE")
-    private String authenciationDate;
+    @CreationTimestamp
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "CREATE_DATE")
+    private Date createdDate;
 
-    @Column(name = "USER_ID")
-    private String userId;
+    @Column(name = "ROLE", length = 64)
+    private String role;
+
+    @Column(name = "PHONE_NUMBER")
+    private String phoneNumber;
+
+    @Column(name = "EMAIL")
+    private String email;
+
+    @OneToOne(mappedBy = "authenciationEntity", cascade = CascadeType.ALL)
+    private UserEntity userEntity;
+
 }

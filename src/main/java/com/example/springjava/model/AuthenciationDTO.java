@@ -31,10 +31,13 @@ public class AuthenciationDTO {
     @JsonProperty(value = "platform")
     private String platform;
 
-    @JsonProperty(value = "authenciationDate")
-    private String authenciationDate;
+    @JsonProperty(value = "role")
+    private String role;
 
-    @JsonProperty(value = "userId")
-    private String userId;
+    @JsonProperty(value = "phoneNumber")
+    private String phoneNumber;
+
+    @JsonProperty(value = "email")
+    private String email;
 
 }

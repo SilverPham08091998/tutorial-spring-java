@@ -15,12 +15,16 @@ public class ApiErrorResponse {
 
     @JsonProperty("status")
     private String status;
+
     @JsonProperty("error")
     private String error;
+
     @JsonProperty("message")
     private String message;
+
     @JsonProperty("path")
     private String path;
+
     @JsonProperty("timestamp")
     private Date timestamp;
 
