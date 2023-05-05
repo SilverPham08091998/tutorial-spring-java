@@ -23,6 +23,7 @@ public class UserPrincipal implements UserDetails {
     private String role;
     private String phoneNumber;
     private String email;
+    private String deviceId;
 
     public static UserPrincipal create(UserDetail user) {
         if (user == null)
@@ -37,7 +38,8 @@ public class UserPrincipal implements UserDetails {
                 user.getUserId(),
                 user.getRole(),
                 user.getPhoneNumber(),
-                user.getEmail()
+                user.getEmail(),
+                user.getDeviceId()
 
         );
     }

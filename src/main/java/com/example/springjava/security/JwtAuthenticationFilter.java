@@ -1,6 +1,7 @@
 package com.example.springjava.security;
 
 
+import com.example.springjava.respository.JwtHistoryRepository;
 import com.example.springjava.security.model.UserPrincipal;
 import com.example.springjava.security.service.CustomUserDetailServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,8 +19,9 @@ import java.io.IOException;
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     @Autowired
+    JwtHistoryRepository jwtHistoryRepository;
+    @Autowired
     private JwtTokenProvider tokenProvider;
-
     @Autowired
     private CustomUserDetailServiceImpl customUserDetailService;
 
@@ -29,7 +31,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         try {
             String jwt = getJwt(request);
             if (jwt != null && tokenProvider.validateToken(jwt)) {
-                String username = tokenProvider.getUserNameFromToken(jwt);
+
+
+                String username = tokenProvider.getUserIdFromToken(jwt);
                 UserPrincipal userPrincipal = (UserPrincipal) customUserDetailService.loadUserByUsername(username);
                 UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
                         userPrincipal, null, userPrincipal.getAuthorities());

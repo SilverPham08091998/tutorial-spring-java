@@ -55,7 +55,8 @@ public class AuthenciationServiceImpl implements AuthenciationService {
                 authenciation.getPassword(),
                 authenciation.getRole(),
                 authenciation.getPhoneNumber(),
-                authenciation.getEmail()
+                authenciation.getEmail(),
+                authenciation.getDeviceId()
         );
     }
 

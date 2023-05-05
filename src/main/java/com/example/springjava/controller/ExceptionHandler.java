@@ -49,38 +49,27 @@ public class ExceptionHandler {
     }
 
     private ResponseEntity<JsonNode> redirectHttpClientErrorException(HttpClientErrorException e) {
-        int status = 400;
-        String systemDirect = null;
-        String errorLabel = null;
         String description = null;
         String message = null;
-        String code = null;
         JsonNode bodyObject = null;
-        status = e.getStatusCode().value();
         try {
             bodyObject = mapper.readTree(e.getResponseBodyAsString());
-            systemDirect = getValueFromResponse(bodyObject, "system");
-            errorLabel = getValueFromResponse(bodyObject, "errorLabel");
             description = getValueFromResponse(bodyObject, "description");
             message = getValueFromResponse(bodyObject, "message");
-            code = getValueFromResponse(bodyObject, "code");
         } catch (Exception e3) {
-            systemDirect = system;
-            errorLabel = Integer.toString(status);
             try {
-                bodyObject = mapper.readTree(e.getResponseBodyAsString());
                 description = "HttpClientErrorException: " + e.getResponseBodyAsString();
             } catch (Exception e1) {
                 description = "HttpClientErrorException: " + e;
             }
         }
-        JsonNode response = null;
-        response = mapper.valueToTree(new ApiErrorResponse(e.getStatusCode().toString(), message,
+
+        JsonNode response = mapper.valueToTree(new ApiErrorResponse(e.getStatusCode().toString(), message,
                 message, description));
 
         switch (e.getStatusCode()) {
             case BAD_REQUEST:
-                return new ResponseEntity<JsonNode>(response, HttpStatus.BAD_REQUEST);
+                return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
             case CONFLICT:
                 return new ResponseEntity<>(response, HttpStatus.CONFLICT);
             case EXPECTATION_FAILED:

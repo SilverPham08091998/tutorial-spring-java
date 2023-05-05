@@ -1,22 +1,33 @@
-package com.example.springjava.security.model;
+package com.example.springjava.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.Date;
 
-@AllArgsConstructor
 @Data
+@AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class UserDetail {
-    private static final long serialVersionUID = -5162456130461860047L;
+public class JWTHistoryDTO {
+
     private String userId;
-    private String username;
-    private String password;
-    private String role;
+
+    private String jti;
+
+    private String ati;
+
+    private String typeToken;
+
+    private Date expireDate;
+
+    private boolean jwtActive;
+
     private String phoneNumber;
+
     private String email;
+
     private String deviceId;
 }
