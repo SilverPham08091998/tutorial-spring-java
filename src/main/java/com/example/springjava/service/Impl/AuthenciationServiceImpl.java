@@ -1,20 +1,32 @@
 package com.example.springjava.service.Impl;
 
 import com.example.springjava.entity.AuthenciationEntity;
+import com.example.springjava.entity.JwtHistoryEntity;
 import com.example.springjava.entity.UserEntity;
 import com.example.springjava.exception.BadRequestException;
 import com.example.springjava.model.AuthenciationDTO;
 import com.example.springjava.model.UserDTO;
+import com.example.springjava.payload.request.SignInPayload;
+import com.example.springjava.payload.response.ApiResponse;
 import com.example.springjava.respository.AuthenciationRepository;
+import com.example.springjava.respository.JwtHistoryRepository;
 import com.example.springjava.respository.UserRepository;
+import com.example.springjava.security.JwtTokenProvider;
 import com.example.springjava.security.model.UserDetail;
 import com.example.springjava.service.AuthenciationService;
+import com.example.springjava.service.OTPService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 
 @Service
@@ -31,6 +43,18 @@ public class AuthenciationServiceImpl implements AuthenciationService {
 
     @Autowired
     PasswordEncoder passwordEncoder;
+
+    @Autowired
+    AuthenticationManager authenticationManager;
+
+    @Autowired
+    JwtTokenProvider jwtTokenProvider;
+
+    @Autowired
+    JwtHistoryRepository jwtHistoryRepository;
+
+    @Autowired
+    OTPService otpService;
 
     @Override
     @Transactional
@@ -61,8 +85,22 @@ public class AuthenciationServiceImpl implements AuthenciationService {
     }
 
     @Override
-    public void signIn() {
-
+    public ApiResponse<?> signIn(SignInPayload request) {
+        List<JwtHistoryEntity> listJWT = jwtHistoryRepository.findJwtHistoryEntitiesByUsername(request.getUsername());
+        if (listJWT.size() > 0) {
+            for (JwtHistoryEntity historyEntity : listJWT) {
+                if (!historyEntity.getDeviceId().equals(request.getDeviceId())) {
+                    otpService.generateOTP(request.getUsername(), historyEntity.getPhoneNumber(), historyEntity.getEmail());
+                    break;
+                }
+            }
+            return new ApiResponse<>(true, 200, "success", "Thiết bị đang đăng nhập trên tài khoản khác vui lòng nhập mã OTP để xác thực thiết bị mới");
+        } else {
+            UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword());
+            Authentication authentication = authenticationManager.authenticate(token);
+            SecurityContextHolder.getContext().setAuthentication(authentication);
+            return new ApiResponse<>(true, 200, "success", jwtTokenProvider.createAuthResponse(authentication));
+        }
     }
 
 

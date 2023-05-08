@@ -4,6 +4,9 @@ package com.example.springjava.security;
 import com.example.springjava.respository.JwtHistoryRepository;
 import com.example.springjava.security.model.UserPrincipal;
 import com.example.springjava.security.service.CustomUserDetailServiceImpl;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jws;
+import io.jsonwebtoken.Jwts;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -32,8 +35,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             String jwt = getJwt(request);
             if (jwt != null && tokenProvider.validateToken(jwt)) {
 
-
-                String username = tokenProvider.getUserIdFromToken(jwt);
+                String username = tokenProvider.getUserNameFromToken(jwt);
                 UserPrincipal userPrincipal = (UserPrincipal) customUserDetailService.loadUserByUsername(username);
                 UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
                         userPrincipal, null, userPrincipal.getAuthorities());
@@ -58,6 +60,11 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     protected boolean shouldNotFilter(HttpServletRequest request) {
         String path = request.getRequestURI();
         return path.startsWith("/api/public/");
+    }
+
+    public Claims getClaimsFromToken(String token) {
+        Jws<Claims> parsedToken = Jwts.parser().parseClaimsJws(token);
+        return parsedToken.getBody();
     }
 
 }

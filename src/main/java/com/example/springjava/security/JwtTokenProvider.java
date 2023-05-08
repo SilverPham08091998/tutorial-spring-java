@@ -60,7 +60,7 @@ public class JwtTokenProvider {
                 .compact();
     }
 
-    public String getUserIdFromToken(String token) {
+    public String getUserNameFromToken(String token) {
         Claims claims = Jwts.parser()
                 .setSigningKey(JWT_SECRET)
                 .parseClaimsJws(token)
@@ -79,8 +79,8 @@ public class JwtTokenProvider {
             logger.error("Invalid JWT token");
         } catch (ExpiredJwtException ex) {
             logger.error("Expired JWT token");
-            String userId = getUserIdFromToken(authToken);
-            List<JwtHistoryEntity> listJWT = jwtHistoryRepository.findJwtHistoryEntitiesByUserId(userId);
+            String username = getUserNameFromToken(authToken);
+            List<JwtHistoryEntity> listJWT = jwtHistoryRepository.findJwtHistoryEntitiesByUsername(username);
             for (JwtHistoryEntity jwtHistory : listJWT) {
                 JWTExpireEntity jwtExpire = new JWTExpireEntity();
                 jwtExpire.setJti(jwtHistory.getJti());
@@ -90,6 +90,7 @@ public class JwtTokenProvider {
                 jwtExpire.setDeviceId(jwtHistory.getDeviceId());
                 jwtExpire.setExpireDate(jwtExpire.getExpireDate());
                 jwtExpire.setExpireStatus("EXPIRE");
+                jwtExpire.setUsername(username);
                 jwtExpireRepository.save(jwtExpire);
             }
         } catch (UnsupportedJwtException ex) {
@@ -142,7 +143,9 @@ public class JwtTokenProvider {
         entity.setJwtActive(true);
         entity.setDeviceId(user.getDeviceId());
         entity.setCreatedDate(new Date());
+        entity.setUsername(user.getUsername());
         jwtHistoryRepository.save(entity);
+
     }
 }
 

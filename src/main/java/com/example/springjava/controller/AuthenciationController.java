@@ -22,7 +22,6 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -80,16 +79,11 @@ public class AuthenciationController {
 
 
     @PostMapping(value = "/sign-in")
-    public ResponseEntity<ApiResponse<AuthResponse>> signIn(@RequestBody SignInPayload request) throws AuthenticationException {
+    public ResponseEntity<ApiResponse<?>> signIn(@RequestBody SignInPayload request) throws AuthenticationException {
         try {
-            UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword());
-            Authentication authentication = authenticationManager.authenticate(token);
-            SecurityContextHolder.getContext().setAuthentication(authentication);
-            return ResponseEntity.ok(new ApiResponse<>(true, 200, "success", jwtTokenProvider.createAuthResponse(authentication)));
+            return ResponseEntity.ok(authenciationService.signIn(request));
         } catch (Exception e) {
             throw e;
         }
-
-
     }
 }

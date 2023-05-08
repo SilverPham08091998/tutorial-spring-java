@@ -24,33 +24,36 @@ public class JwtHistoryEntity {
     @Column(name = "USER_ID")
     private String userId;
 
-    @Column(name = "ati")
+    @Column(name = "ATI")
     private String ati;
 
-    @Column(name = "type_token", length = 256)
+    @Column(name = "TYPE_TOKEN", length = 256)
     private String typeToken;
 
     @CreationTimestamp
     @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "created_Date")
+    @Column(name = "CREADTED_DATE")
     private Date createdDate;
 
     @UpdateTimestamp
     @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "expire_date")
+    @Column(name = "EXPIRED_DATE")
     private Date expireDate;
 
-    @Column(name = "jwt_active")
+    @Column(name = "JWT_ACTIVE")
     private boolean jwtActive;
 
-    @Column(name = "phoneNumber", length = 256)
+    @Column(name = "PHONENUMBER", length = 256)
     private String phoneNumber;
 
 
-    @Column(name = "email", length = 256)
+    @Column(name = "EMAIL", length = 256)
     private String email;
 
-    @Column(name = "device_ID")
+    @Column(name = "DEVICE_ID")
     private String deviceId;
+
+    @Column(name = "USER_NAME")
+    private String username;
 
 }

@@ -8,5 +8,5 @@ import java.util.List;
 
 @Repository
 public interface JwtHistoryRepository extends JpaRepository<JwtHistoryEntity, String> {
-    List<JwtHistoryEntity> findJwtHistoryEntitiesByUserId(String userId);
+    List<JwtHistoryEntity> findJwtHistoryEntitiesByUsername(String username);
 }

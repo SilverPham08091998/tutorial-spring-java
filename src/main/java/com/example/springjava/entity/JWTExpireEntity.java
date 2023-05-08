@@ -18,25 +18,28 @@ import java.util.Date;
 @Builder
 public class JWTExpireEntity {
     @Id
-    @Column(name = "jti")
+    @Column(name = "JTI")
     private String jti;
 
-    @Column(name = "user_id")
+    @Column(name = "USER_ID")
     private String userId;
 
-    @Column(name = "ati")
+    @Column(name = "ATI")
     private String ati;
 
-    @Column(name = "expire_status")
+    @Column(name = "EXPIRED_STATUS")
     private String expireStatus;
 
-    @Column(name = "expire_date")
+    @Column(name = "EXPERED_DATE")
     private Date expireDate;
 
-    @Column(name = "device_Id")
+    @Column(name = "DEVICE_ID")
     private String deviceId;
 
-    @Column(name = "type_token")
+    @Column(name = "TYPE_TOKEN")
     private String typeToken;
+
+    @Column(name = "USER_NAME")
+    private String username;
 
 }
