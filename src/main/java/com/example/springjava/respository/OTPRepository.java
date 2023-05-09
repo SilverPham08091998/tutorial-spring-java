@@ -6,5 +6,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface OTPRepository extends JpaRepository<OTPEntity, Long> {
-    OTPEntity findOTPEntityByUsername(String username);
+    OTPEntity findOTPEntityByUsernameAndMatching(String username, boolean matching);
 }

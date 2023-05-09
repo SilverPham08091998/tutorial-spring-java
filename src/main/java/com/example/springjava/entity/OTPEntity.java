@@ -50,4 +50,7 @@ public class OTPEntity {
 
     @Column(name = "EMAIL")
     private String email;
+
+    @Column(name = "OTP_TYPE")
+    private String otpType;
 }

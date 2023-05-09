@@ -1,8 +1,10 @@
 package com.example.springjava.security;
 
+import com.example.springjava.entity.AuthenciationEntity;
 import com.example.springjava.entity.JWTExpireEntity;
 import com.example.springjava.entity.JwtHistoryEntity;
 import com.example.springjava.payload.response.AuthResponse;
+import com.example.springjava.respository.AuthenciationRepository;
 import com.example.springjava.respository.JwtExpireRepository;
 import com.example.springjava.respository.JwtHistoryRepository;
 import com.example.springjava.security.model.UserPrincipal;
@@ -20,7 +22,7 @@ public class JwtTokenProvider {
 
     private static final Logger logger = LogManager.getLogger(JwtTokenProvider.class);
     private final String JWT_SECRET = "jwt_secret_key";
-    private final long JWT_EXPIRATION = 30000; // 7 days in milliseconds
+    private final long JWT_EXPIRATION = 3000000; // 7 days in milliseconds
     private final long JWT_REFRESH_EXPIRATION = 604800000; // 7 days in milliseconds
 
     @Autowired
@@ -29,6 +31,10 @@ public class JwtTokenProvider {
     @Autowired
     JwtExpireRepository jwtExpireRepository;
 
+    @Autowired
+    AuthenciationRepository authenciationRepository;
+
+
     public String generateAccessToken(String jti, UserPrincipal userPrincipal, Date now, Date expiryDate) {
         Claims claims = Jwts.claims().setSubject(userPrincipal.getUsername());
         claims.put("userId", userPrincipal.getUserId());
@@ -36,6 +42,7 @@ public class JwtTokenProvider {
         claims.put("role", userPrincipal.getRole());
         claims.put("phoneNumber", userPrincipal.getPhoneNumber());
         claims.put("authorities", userPrincipal.getAuthorities());
+        claims.put("deviceId", userPrincipal.getDeviceId());
 
         return Jwts.builder()
                 .setClaims(claims)
@@ -69,8 +76,22 @@ public class JwtTokenProvider {
         return claims.getSubject();
     }
 
+    public Claims decodeJwt(String token) {
+        return Jwts.parser()
+                .setSigningKey(JWT_SECRET)
+                .parseClaimsJws(token)
+                .getBody();
+    }
+
     public boolean validateToken(String authToken) {
         try {
+            Claims body = decodeJwt(authToken);
+            String username = body.getSubject();
+            String deviceId = body.get("deviceId").toString();
+            AuthenciationEntity authenciationEntity = authenciationRepository.findAuthenciationEntityByUsernameAndAndDeviceId(username, deviceId);
+            if (authenciationEntity == null) {
+                return false;
+            }
             Jwts.parser().setSigningKey(JWT_SECRET).parseClaimsJws(authToken);
             return true;
         } catch (SignatureException ex) {
@@ -82,6 +103,7 @@ public class JwtTokenProvider {
             String username = getUserNameFromToken(authToken);
             List<JwtHistoryEntity> listJWT = jwtHistoryRepository.findJwtHistoryEntitiesByUsername(username);
             for (JwtHistoryEntity jwtHistory : listJWT) {
+                jwtHistoryRepository.delete(jwtHistory);
                 JWTExpireEntity jwtExpire = new JWTExpireEntity();
                 jwtExpire.setJti(jwtHistory.getJti());
                 jwtExpire.setAti(jwtHistory.getAti());
@@ -132,6 +154,20 @@ public class JwtTokenProvider {
     }
 
     private void insertJWTToDB(String jti, UserPrincipal user, String ati, String typeToken, Date expireDate) {
+        JwtHistoryEntity jwtHistory = jwtHistoryRepository.findJwtHistoryEntityByUsernameAndTypeToken(user.getUsername(), typeToken);
+        if (jwtHistory != null) {
+            jwtHistoryRepository.delete(jwtHistory);
+            JWTExpireEntity jwtExpire = new JWTExpireEntity();
+            jwtExpire.setJti(jwtHistory.getJti());
+            jwtExpire.setExpireDate(jwtHistory.getExpireDate());
+            jwtExpire.setAti(jwtHistory.getAti());
+            jwtExpire.setTypeToken(jwtHistory.getTypeToken());
+            jwtExpire.setUserId(jwtHistory.getUserId());
+            jwtExpire.setExpireStatus("SIGN_IN_ANOTHER_DEVICE");
+            jwtExpire.setUsername(jwtHistory.getUsername());
+            jwtExpire.setDeviceId(jwtHistory.getDeviceId());
+            jwtExpireRepository.save(jwtExpire);
+        }
         JwtHistoryEntity entity = new JwtHistoryEntity();
         entity.setJti(jti);
         entity.setAti(ati);
@@ -145,7 +181,6 @@ public class JwtTokenProvider {
         entity.setCreatedDate(new Date());
         entity.setUsername(user.getUsername());
         jwtHistoryRepository.save(entity);
-
     }
 }
 

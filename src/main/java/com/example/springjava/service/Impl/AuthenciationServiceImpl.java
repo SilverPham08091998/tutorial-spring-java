@@ -1,7 +1,6 @@
 package com.example.springjava.service.Impl;
 
 import com.example.springjava.entity.AuthenciationEntity;
-import com.example.springjava.entity.JwtHistoryEntity;
 import com.example.springjava.entity.UserEntity;
 import com.example.springjava.exception.BadRequestException;
 import com.example.springjava.model.AuthenciationDTO;
@@ -25,8 +24,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
 
 
 @Service
@@ -86,14 +83,9 @@ public class AuthenciationServiceImpl implements AuthenciationService {
 
     @Override
     public ApiResponse<?> signIn(SignInPayload request) {
-        List<JwtHistoryEntity> listJWT = jwtHistoryRepository.findJwtHistoryEntitiesByUsername(request.getUsername());
-        if (listJWT.size() > 0) {
-            for (JwtHistoryEntity historyEntity : listJWT) {
-                if (!historyEntity.getDeviceId().equals(request.getDeviceId())) {
-                    otpService.generateOTP(request.getUsername(), historyEntity.getPhoneNumber(), historyEntity.getEmail());
-                    break;
-                }
-            }
+        AuthenciationEntity authenciation = authenciationRepository.findAuthenciationEntityByUsername(request.getUsername());
+        if (authenciation != null && !authenciation.getDeviceId().equals(request.getDeviceId())) {
+            otpService.generateOTP(request.getUsername(), authenciation.getPhoneNumber(), authenciation.getEmail());
             return new ApiResponse<>(true, 200, "success", "Thiết bị đang đăng nhập trên tài khoản khác vui lòng nhập mã OTP để xác thực thiết bị mới");
         } else {
             UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword());

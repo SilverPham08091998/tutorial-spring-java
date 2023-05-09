@@ -1,31 +1,22 @@
-package com.example.springjava.model;
+package com.example.springjava.payload.request;
 
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
-import java.util.Date;
 
 
-@Data
-@Builder
-@NoArgsConstructor
 @AllArgsConstructor
-public class OrderDTO {
-
-    private String orderId;
+@NoArgsConstructor
+@Data
+public class CreateOrderPayload {
 
     private String orderName;
 
     private String orderType;
 
     private String orderStatus;
-
-    private Date createDate;
-
-    private Date modifiedDate;
 
     private String productId;
 

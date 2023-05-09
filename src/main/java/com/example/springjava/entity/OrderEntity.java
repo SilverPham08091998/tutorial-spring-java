@@ -18,22 +18,13 @@ import java.util.UUID;
 @AllArgsConstructor
 @Builder
 public class OrderEntity {
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+
     @Id
-    @Column(name = "ID", nullable = false, updatable = false)
-    private long id;
-
-    @Column(name = "USER_ID")
-    private String userId;
-
     @Column(name = "ORDER_ID", unique = true, updatable = false, nullable = false)
     private String orderId = UUID.randomUUID().toString();
 
     @Column(name = "ORDER_NAME")
     private String orderName;
-
-    @Column(name = "ORDER_TYPE")
-    private String orderType;
 
     @Column(name = "ORDER_STATUS")
     private String orderStatus;
@@ -59,5 +50,13 @@ public class OrderEntity {
 
     @Column(name = "PAYMENT_STATUS")
     private String paymentStatus;
+
+    @ManyToOne
+    @JoinColumn(name = "USER_ID")
+    private AuthenciationEntity authenciationEntity;
+
+    @OneToOne
+    @JoinColumn(name = "CATEGORY_ORDER_ID")
+    private CategoryOrderEntity categoryOrderEntity;
 
 }

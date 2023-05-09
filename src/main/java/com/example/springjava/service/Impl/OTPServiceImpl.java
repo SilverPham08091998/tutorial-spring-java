@@ -1,10 +1,12 @@
 package com.example.springjava.service.Impl;
 
+import com.example.springjava.entity.AuthenciationEntity;
 import com.example.springjava.entity.OTPEntity;
 import com.example.springjava.exception.BadRequestException;
 import com.example.springjava.payload.request.VerifyOTPPayload;
 import com.example.springjava.payload.response.ApiResponse;
 import com.example.springjava.payload.response.AuthResponse;
+import com.example.springjava.respository.AuthenciationRepository;
 import com.example.springjava.respository.OTPRepository;
 import com.example.springjava.security.JwtTokenProvider;
 import com.example.springjava.service.OTPService;
@@ -33,6 +35,9 @@ public class OTPServiceImpl implements OTPService {
     @Autowired
     JwtTokenProvider jwtTokenProvider;
 
+    @Autowired
+    AuthenciationRepository authenciationRepository;
+
     @Override
     public void generateOTP(String username, String phoneNumber, String email) {
         OTPEntity otpEntity = new OTPEntity();
@@ -46,13 +51,14 @@ public class OTPServiceImpl implements OTPService {
         otpEntity.setOtp(otp);
         otpEntity.setPhoneNumber(phoneNumber);
         otpEntity.setEmail(email);
+        otpEntity.setOtpType("SIGN-IN-ANOTHER-DEVICE");
         otpRepository.save(otpEntity);
     }
 
     @Override
     public ApiResponse<AuthResponse> verifyOTP(VerifyOTPPayload payload) {
         Date now = new Date();
-        OTPEntity otpEntity = otpRepository.findOTPEntityByUsername(payload.getUsername());
+        OTPEntity otpEntity = otpRepository.findOTPEntityByUsernameAndMatching(payload.getUsername(), false);
         if (otpEntity.getCountWrongOTP() > 3) {
             throw new BadRequestException(String.valueOf(HttpStatus.BAD_REQUEST.value()), HttpStatus.BAD_REQUEST.getReasonPhrase(), "You was entered OTP wrong", "/otp/verify");
         }
@@ -66,6 +72,9 @@ public class OTPServiceImpl implements OTPService {
         }
         otpEntity.setMatching(true);
         otpRepository.save(otpEntity);
+        AuthenciationEntity authenciation = authenciationRepository.findAuthenciationEntityByUsername(payload.getUsername());
+        authenciation.setDeviceId(payload.getDeviceId());
+        authenciationRepository.save(authenciation);
         UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(payload.getUsername(), payload.getPassword());
         Authentication authentication = authenticationManager.authenticate(token);
         SecurityContextHolder.getContext().setAuthentication(authentication);
@@ -77,7 +86,7 @@ public class OTPServiceImpl implements OTPService {
     @Override
     public ApiResponse<String> resendOTP(String username) {
         Date now = new Date();
-        OTPEntity otpEntity = otpRepository.findOTPEntityByUsername(username);
+        OTPEntity otpEntity = otpRepository.findOTPEntityByUsernameAndMatching(username, false);
         if (otpEntity.getResendDate().getTime() > now.getTime()) {
             throw new BadRequestException(String.valueOf(HttpStatus.BAD_REQUEST.value()), HttpStatus.BAD_REQUEST.getReasonPhrase(), "Resend OTP many request , please send again", "/otp/resend");
         }

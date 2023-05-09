@@ -6,6 +6,7 @@ import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
 import java.util.Date;
+import java.util.List;
 import java.util.UUID;
 
 @Entity(name = "AUTHENCIATION")
@@ -54,5 +55,8 @@ public class AuthenciationEntity {
 
     @OneToOne(mappedBy = "authenciationEntity", cascade = CascadeType.ALL)
     private UserEntity userEntity;
+
+    @OneToMany(mappedBy = "authenciationEntity", cascade = CascadeType.ALL)
+    private List<OrderEntity> orderList;
 
 }

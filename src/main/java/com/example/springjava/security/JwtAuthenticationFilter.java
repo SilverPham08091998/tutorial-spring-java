@@ -4,9 +4,6 @@ package com.example.springjava.security;
 import com.example.springjava.respository.JwtHistoryRepository;
 import com.example.springjava.security.model.UserPrincipal;
 import com.example.springjava.security.service.CustomUserDetailServiceImpl;
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jws;
-import io.jsonwebtoken.Jwts;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -34,7 +31,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         try {
             String jwt = getJwt(request);
             if (jwt != null && tokenProvider.validateToken(jwt)) {
-
                 String username = tokenProvider.getUserNameFromToken(jwt);
                 UserPrincipal userPrincipal = (UserPrincipal) customUserDetailService.loadUserByUsername(username);
                 UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
@@ -62,9 +58,5 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         return path.startsWith("/api/public/");
     }
 
-    public Claims getClaimsFromToken(String token) {
-        Jws<Claims> parsedToken = Jwts.parser().parseClaimsJws(token);
-        return parsedToken.getBody();
-    }
 
 }
