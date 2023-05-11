@@ -9,6 +9,7 @@ import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
 import java.util.Date;
+import java.util.List;
 import java.util.UUID;
 
 @Entity(name = "ORDER_INFORMATION")
@@ -39,9 +40,6 @@ public class OrderEntity {
     @Column(name = "MODIFIED_DATE")
     private Date modifiedDate;
 
-    @Column(name = "PRODUCT_IDS")
-    private String productId;
-
     @Column(name = "AMOUNT")
     private long amount;
 
@@ -58,5 +56,8 @@ public class OrderEntity {
     @OneToOne
     @JoinColumn(name = "CATEGORY_ORDER_ID")
     private CategoryOrderEntity categoryOrderEntity;
+
+    @OneToMany(mappedBy = "orderEntity", cascade = CascadeType.ALL)
+    private List<OrderDetailEntity> orderDetailEntities;
 
 }

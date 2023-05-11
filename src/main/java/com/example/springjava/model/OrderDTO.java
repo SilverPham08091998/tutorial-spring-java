@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.List;
 
 
 @Data
@@ -34,4 +35,6 @@ public class OrderDTO {
     private BigDecimal totalAmount;
 
     private String paymentStatus;
+
+    private List<ProductDTO> productDTOList;
 }

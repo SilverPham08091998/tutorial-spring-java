@@ -2,6 +2,7 @@ package com.example.springjava.controller;
 
 
 import com.example.springjava.payload.request.CategoryOrderPayload;
+import com.example.springjava.payload.response.ApiResponse;
 import com.example.springjava.service.CategoryOrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -15,7 +16,7 @@ public class CategoryOrderController {
     CategoryOrderService categoryOrderService;
 
     @GetMapping(value = "/list-order")
-    public ResponseEntity<?> getListCategoryOrder(
+    public ResponseEntity<ApiResponse<?>> getListCategoryOrder(
             @RequestParam(name = "search", required = false) String search,
             @RequestParam(name = "filter", required = false) String filter
     ) {
@@ -27,7 +28,7 @@ public class CategoryOrderController {
     }
 
     @PostMapping(value = "/create-order")
-    public ResponseEntity<?> createCategoryOrder(@RequestBody CategoryOrderPayload.CreateCategoryOrderPayload payload) {
+    public ResponseEntity<ApiResponse<String>> createCategoryOrder(@RequestBody CategoryOrderPayload.CreateCategoryOrderPayload payload) {
         try {
             return ResponseEntity.ok(categoryOrderService.createOrderCategory(payload));
         } catch (Exception e) {
@@ -36,7 +37,7 @@ public class CategoryOrderController {
     }
 
     @PutMapping(value = "/update-order")
-    public ResponseEntity<?> updateCategoryOrder(@RequestBody CategoryOrderPayload.UpdateCategoryOrderPayload payload) {
+    public ResponseEntity<ApiResponse<String>> updateCategoryOrder(@RequestBody CategoryOrderPayload.UpdateCategoryOrderPayload payload) {
         try {
             return ResponseEntity.ok(categoryOrderService.updateOrderCategory(payload));
         } catch (Exception e) {
@@ -45,7 +46,7 @@ public class CategoryOrderController {
     }
 
     @DeleteMapping(value = "/delete")
-    public ResponseEntity<?> deleteCategoryOrder(CategoryOrderPayload.DeleteCategoryOrderPayload payload) {
+    public ResponseEntity<ApiResponse<String>> deleteCategoryOrder(@RequestBody CategoryOrderPayload.DeleteCategoryOrderPayload payload) {
         try {
             return ResponseEntity.ok(categoryOrderService.deleteCategoryOrder(payload));
         } catch (Exception e) {

@@ -22,7 +22,7 @@ public class JwtTokenProvider {
 
     private static final Logger logger = LogManager.getLogger(JwtTokenProvider.class);
     private final String JWT_SECRET = "jwt_secret_key";
-    private final long JWT_EXPIRATION = 3000000; // 7 days in milliseconds
+    private final long JWT_EXPIRATION = 604800000; // 7 days in milliseconds
     private final long JWT_REFRESH_EXPIRATION = 604800000; // 7 days in milliseconds
 
     @Autowired

@@ -45,6 +45,9 @@ public class ProductEntity {
     @Column(name = "AMOUNT")
     private long amount;
 
+    @Column(name = "QUANTITY")
+    private long quantity;
+
     @ManyToOne
     @JoinColumn(name = "CATEGORY_PRODUCT_ID")
     private CategoryProductEntity categoryProductEntity;

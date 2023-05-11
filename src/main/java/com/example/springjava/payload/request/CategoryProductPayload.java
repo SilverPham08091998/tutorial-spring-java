@@ -10,11 +10,11 @@ public class CategoryProductPayload {
     @NoArgsConstructor
     @Data
     public static class CreateCategoryProductPayload {
+        private String categoryOrderId;
         private String categoryProductName;
         private String categoryProductStatus;
 
     }
-
 
     @AllArgsConstructor
     @NoArgsConstructor

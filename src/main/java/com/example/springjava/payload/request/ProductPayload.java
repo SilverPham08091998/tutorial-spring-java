@@ -11,12 +11,12 @@ public class ProductPayload {
     @NoArgsConstructor
     @Data
     public static class CreateProductPayload {
+        private String categoryProductId;
         private String productName;
         private String productStatus;
-
-        private BigDecimal amount;
-
+        private long amount;
         private String productType;
+        private long quantity;
     }
 
 
@@ -27,10 +27,10 @@ public class ProductPayload {
         private String productId;
         private String productName;
         private String productStatus;
-
         private BigDecimal amount;
-
         private String productType;
+        private String quantity;
+
 
     }
 

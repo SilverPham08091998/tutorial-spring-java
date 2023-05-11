@@ -1,14 +1,16 @@
 package com.example.springjava.service;
 
 import com.example.springjava.model.OrderDTO;
+import com.example.springjava.payload.request.OrderPayload;
+import com.example.springjava.payload.response.ApiResponse;
 
 import java.util.List;
 
 public interface OrderService {
 
-    void createOrder(OrderDTO orderDTO);
+    ApiResponse<String> createOrder(OrderPayload.CreateOrderPayload payload);
 
-    List<OrderDTO> getListOrder(String search);
+    ApiResponse<List<OrderDTO>> getListOrder(String search);
 
     void updateOrder();
 

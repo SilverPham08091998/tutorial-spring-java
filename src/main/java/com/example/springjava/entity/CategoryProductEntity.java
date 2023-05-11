@@ -22,13 +22,13 @@ public class CategoryProductEntity {
 
     @Id
     @Column(name = "CATEGORY_PRODUCT_ID")
-    private String categoryOrderId = UUID.randomUUID().toString();
+    private String categoryProductId = UUID.randomUUID().toString();
 
     @Column(name = "CATEGORY_PRODUCT_NAME")
-    private String categoryOrderName;
+    private String categoryProductName;
 
     @Column(name = "CATEGORY_PRODUCT_STATUS")
-    private String categoryOrderStatus;
+    private String categoryProductStatus;
 
     @CreationTimestamp
     @Temporal(TemporalType.TIMESTAMP)
