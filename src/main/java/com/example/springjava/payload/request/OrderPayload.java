@@ -5,7 +5,6 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.math.BigDecimal;
 import java.util.List;
 
 public class OrderPayload {
@@ -16,17 +15,40 @@ public class OrderPayload {
 
         private String orderName;
 
-        private String orderType;
+        private String categoryOrderId;
 
         private String orderStatus;
-        
+
         private String paymentStatus;
 
-        private BigDecimal amount;
+        private List<ProductDTO> productDTOList;
 
-        private BigDecimal totalAmount;
+        private long discount;
+
+        private String userId;
+
+    }
+
+    @AllArgsConstructor
+    @NoArgsConstructor
+    @Data
+    public static class UpdateOrderPayload {
+
+        private String orderId;
+
+        private String orderName;
+
+        private String categoryOrderId;
+
+        private String orderStatus;
+
+        private String paymentStatus;
 
         private List<ProductDTO> productDTOList;
+
+        private long discount;
+
+        private String userId;
 
     }
 }

@@ -10,7 +10,7 @@ public interface OrderService {
 
     ApiResponse<String> createOrder(OrderPayload.CreateOrderPayload payload);
 
-    ApiResponse<List<OrderDTO>> getListOrder(String search);
+    ApiResponse<List<OrderDTO>> getListOrder(String search , String userId);
 
     void updateOrder();
 

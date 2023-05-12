@@ -28,13 +28,11 @@ public class OrderDTO {
 
     private Date modifiedDate;
 
-    private String productId;
-
     private BigDecimal amount;
 
     private BigDecimal totalAmount;
 
     private String paymentStatus;
 
-    private List<ProductDTO> productDTOList;
+    private List<OrderDetailDTO> orderDetailDTOList;
 }

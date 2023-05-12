@@ -40,8 +40,8 @@ public class CategoryOrderEntity {
     @Column(name = "MODIFIED_DATE")
     private Date modifiedDate;
 
-    @OneToOne(mappedBy = "categoryOrderEntity", cascade = CascadeType.ALL)
-    private OrderEntity orderEntity;
+    @OneToMany(mappedBy = "categoryOrderEntity", cascade = CascadeType.ALL)
+    private List<OrderEntity> orderEntityList;
 
     @OneToMany(mappedBy = "categoryOrderEntity", cascade = CascadeType.ALL)
     private List<CategoryProductEntity> categoryProductEntities;

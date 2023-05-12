@@ -2,9 +2,9 @@ package com.example.springjava.entity;
 
 
 import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
@@ -14,10 +14,10 @@ import java.util.UUID;
 
 @Entity(name = "ORDER_INFORMATION")
 @Table(name = "ORDER_INFORMATION")
-@Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
+@Getter
+@Setter
 public class OrderEntity {
 
     @Id
@@ -46,6 +46,9 @@ public class OrderEntity {
     @Column(name = "TOTAL_AMOUNT")
     private long totalAmount;
 
+    @Column(name = "DISCOUNT")
+    private long discount;
+
     @Column(name = "PAYMENT_STATUS")
     private String paymentStatus;
 
@@ -53,7 +56,7 @@ public class OrderEntity {
     @JoinColumn(name = "USER_ID")
     private AuthenciationEntity authenciationEntity;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "CATEGORY_ORDER_ID")
     private CategoryOrderEntity categoryOrderEntity;
 

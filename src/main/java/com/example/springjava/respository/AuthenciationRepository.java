@@ -12,4 +12,6 @@ public interface AuthenciationRepository extends JpaRepository<AuthenciationEnti
 
     AuthenciationEntity findAuthenciationEntityByUsernameAndAndDeviceId(String username, String deviceId);
 
+    AuthenciationEntity findAuthenciationEntityByUserId(String userId);
+
 }
