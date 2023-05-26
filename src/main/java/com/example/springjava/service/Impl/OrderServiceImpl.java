@@ -5,9 +5,7 @@ import com.example.springjava.entity.AuthenciationEntity;
 import com.example.springjava.entity.CategoryOrderEntity;
 import com.example.springjava.entity.OrderDetailEntity;
 import com.example.springjava.entity.OrderEntity;
-import com.example.springjava.model.OrderDTO;
-import com.example.springjava.model.OrderDetailDTO;
-import com.example.springjava.model.ProductDTO;
+import com.example.springjava.model.*;
 import com.example.springjava.payload.request.OrderPayload;
 import com.example.springjava.payload.response.ApiResponse;
 import com.example.springjava.respository.AuthenciationRepository;
@@ -17,6 +15,9 @@ import com.example.springjava.respository.OrderRepository;
 import com.example.springjava.service.OrderService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -76,7 +77,7 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public ApiResponse<List<OrderDTO>> getListOrder(String search, String userId) {
+    public List<OrderDTO> getListOrder(String search, String userId) {
         List<OrderEntity> orderEntityList = orderRepository.findOrderEntitiesByAuthenciationEntity_UserId(userId);
         List<OrderDTO> orderDTOList = new ArrayList<>();
         for (OrderEntity orderEntity : orderEntityList) {
@@ -86,7 +87,34 @@ public class OrderServiceImpl implements OrderService {
             orderDTO.setOrderDetailDTOList(orderDetailDTOList);
             orderDTOList.add(orderDTO);
         }
-        return new ApiResponse<>(true, 200, "success", orderDTOList);
+        return orderDTOList;
+    }
+
+    @Override
+    public PaginationDTO<OrderDTO> getListOrder(OrderFilter orderFilter, Pageable pageable) {
+
+        Specification<OrderEntity> specification = new OrderSpecification(orderFilter);
+
+        Page<OrderEntity> orderEntityPage = orderRepository.findAll(specification, pageable);
+
+        List<OrderDTO> orderDTOList = new ArrayList<>();
+        for (OrderEntity orderEntity : orderEntityPage.getContent()) {
+            OrderDTO orderDTO = modelMapper.map(orderEntity, OrderDTO.class);
+            orderDTO.setOrderType(orderEntity.getCategoryOrderEntity().getCategoryOrderName());
+            List<OrderDetailDTO> orderDetailDTOList = Arrays.asList(modelMapper.map(orderEntity.getOrderDetailEntities(), OrderDetailDTO[].class));
+            orderDTO.setOrderDetailDTOList(orderDetailDTOList);
+            orderDTOList.add(orderDTO);
+        }
+        PaginationDTO<OrderDTO> orderDTOPaginationDTO = new PaginationDTO<>();
+        orderDTOPaginationDTO.setSize(orderEntityPage.getSize());
+        orderDTOPaginationDTO.setList(orderDTOList);
+        orderDTOPaginationDTO.setTotalPage(orderEntityPage.getTotalPages());
+        orderDTOPaginationDTO.setCurrentPage(pageable.getPageNumber() + 1);
+        orderDTOPaginationDTO.setNext(orderEntityPage.hasNext());
+        orderDTOPaginationDTO.setPrevious(orderEntityPage.hasPrevious());
+        orderDTOPaginationDTO.setTotalItem(orderEntityPage.getTotalElements());
+        orderDTOPaginationDTO.setTotalItemPerPage(orderEntityPage.getNumberOfElements());
+        return orderDTOPaginationDTO;
     }
 
     @Override
