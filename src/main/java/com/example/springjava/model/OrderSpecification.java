@@ -32,7 +32,6 @@ public class OrderSpecification implements Specification<OrderEntity> {
     @Override
     public Predicate toPredicate(Root<OrderEntity> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) {
         List<Predicate> predicates = new ArrayList<>();
-
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
         Join<OrderEntity, AuthenciationEntity> join = root.join("authenciationEntity");
@@ -73,7 +72,7 @@ public class OrderSpecification implements Specification<OrderEntity> {
             try {
                 java.util.Date modifiedDate = dateFormat.parse(orderFilter.getCreateDate());
                 java.sql.Date sqlDate = new Date(modifiedDate.getTime());
-                Expression<Date> expressionModifiedDateTrunc = criteriaBuilder.function("TRUNC", java.sql.Date.class, root.<java.util.Date>get("modifiedDate"));
+                Expression<Date> expressionModifiedDateTrunc = criteriaBuilder.function("DATE", java.sql.Date.class, root.<java.util.Date>get("modifiedDate"));
                 predicates.add(criteriaBuilder.and(criteriaBuilder.equal(expressionModifiedDateTrunc, sqlDate)));
             } catch (ParseException e) {
                 throw new RuntimeException(e);

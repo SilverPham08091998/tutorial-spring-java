@@ -10,7 +10,7 @@ import com.example.springjava.respository.AuthenciationRepository;
 import com.example.springjava.respository.OTPRepository;
 import com.example.springjava.security.JwtTokenProvider;
 import com.example.springjava.service.OTPService;
-import com.example.springjava.util.GenarateOTP;
+import com.example.springjava.util.function.GenarateOTP;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;

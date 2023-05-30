@@ -1,4 +1,4 @@
-package com.example.springjava.util;
+package com.example.springjava.util.function;
 
 import java.text.DateFormat;
 import java.text.ParseException;

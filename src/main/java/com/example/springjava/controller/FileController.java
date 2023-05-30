@@ -8,8 +8,10 @@ import com.example.springjava.model.OrderDetailDTO;
 import com.example.springjava.model.UserDTO;
 import com.example.springjava.service.OrderService;
 import com.example.springjava.service.UserService;
-import com.example.springjava.util.ExcelGenerator;
-import com.example.springjava.util.ExcelMultipleGenerator;
+import com.example.springjava.util.excel.ExcelGenerator;
+import com.example.springjava.util.excel.ExcelMultipleGenerator;
+import com.example.springjava.util.pdf.GenerateTemplatePDF;
+import net.sf.jasperreports.engine.JRException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.core.io.Resource;
@@ -18,6 +20,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
@@ -67,5 +70,21 @@ public class FileController {
         InputStreamResource inputStreamResource = new InputStreamResource(generator.generateExcelFile(1));
         return ResponseEntity.ok().headers(headers).contentType(MediaType.APPLICATION_OCTET_STREAM)
                 .body(inputStreamResource);
+    }
+
+    @GetMapping(value = "/order/export-pdf/{userId}", produces = MediaType.APPLICATION_PDF_VALUE)
+    public ResponseEntity<InputStreamResource> exportPdfOrder(
+            @PathVariable(value = "userId") String userId
+    ) throws IOException, JRException {
+
+        HttpHeaders headers = new HttpHeaders();
+        String headerKey = "Content-Disposition";
+        String headerValue = "attachment; filename=order.pdf";
+        headers.add(headerKey, headerValue);
+        GenerateTemplatePDF pdf = new GenerateTemplatePDF();
+        byte[] data = pdf.generatePdf();
+        ByteArrayInputStream inputStream = new ByteArrayInputStream(data);
+        return ResponseEntity.ok().headers(headers).contentType(MediaType.APPLICATION_PDF)
+                .body(new InputStreamResource(inputStream));
     }
 }
