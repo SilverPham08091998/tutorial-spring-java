@@ -1,12 +1,12 @@
 package com.example.springjava.service.Impl;
 
-import com.example.springjava.entity.CategoryOrderEntity;
+import com.example.springjava.entity.CategoryEntity;
 import com.example.springjava.entity.CategoryProductEntity;
 import com.example.springjava.model.CategoryProductDTO;
 import com.example.springjava.payload.request.CategoryProductPayload;
 import com.example.springjava.payload.response.ApiResponse;
-import com.example.springjava.respository.CategoryOrderRepository;
 import com.example.springjava.respository.CategoryProductRepository;
+import com.example.springjava.respository.CategoryRepository;
 import com.example.springjava.service.CategoryProductService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,7 +23,7 @@ public class CategoryProductServiceImpl implements CategoryProductService {
     CategoryProductRepository categoryProductRepository;
 
     @Autowired
-    CategoryOrderRepository categoryOrderRepository;
+    CategoryRepository categoryOrderRepository;
 
     @Autowired
     ModelMapper modelMapper;
@@ -31,18 +31,18 @@ public class CategoryProductServiceImpl implements CategoryProductService {
     @Override
     @Transactional
     public ApiResponse<String> createProductCategory(CategoryProductPayload.CreateCategoryProductPayload payload) {
-        CategoryOrderEntity categoryOrder = categoryOrderRepository.findCategoryOrderEntityByCategoryOrderId(payload.getCategoryOrderId());
+        CategoryEntity categoryOrder = categoryOrderRepository.findCategoryEntitiesByCategoryId(Long.parseLong(payload.getCategoryOrderId()));
         CategoryProductEntity categoryProduct = new CategoryProductEntity();
         categoryProduct.setCategoryProductName(payload.getCategoryProductName());
         categoryProduct.setCategoryProductStatus(payload.getCategoryProductStatus());
-        categoryProduct.setCategoryOrderEntity(categoryOrder);
+        categoryProduct.setCategoryEntity(categoryOrder);
         categoryProductRepository.save(categoryProduct);
         return new ApiResponse<>(true, 200, "success", "Category product is created");
     }
 
     @Override
     public ApiResponse<List<CategoryProductDTO>> getListCategoryProduct(String search, String filter, String categoryOrderId) {
-        List<CategoryProductEntity> entityList = categoryProductRepository.findCategoryProductEntitiesByCategoryOrderEntity_CategoryOrderId(categoryOrderId);
+        List<CategoryProductEntity> entityList = categoryProductRepository.findCategoryProductEntityByCategoryEntity_CategoryId(Long.valueOf(categoryOrderId));
         List<CategoryProductDTO> dtoList = new ArrayList<>();
         for (CategoryProductEntity entity : entityList) {
             CategoryProductDTO categoryProductDTO = modelMapper.map(entity, CategoryProductDTO.class);

@@ -9,6 +9,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
@@ -27,6 +28,7 @@ public class UserController {
 
 
     @GetMapping(value = "/list")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<ApiResponse<List<UserDTO>>> getList(
             @RequestParam(name = "fullName", required = false) String fullName,
             @RequestParam(name = "address", required = false) String address,
@@ -75,6 +77,7 @@ public class UserController {
 
     @DeleteMapping(value = "/delete")
     @Transactional
+    @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<ApiResponse<String>> deleteUser(
             @RequestBody Map<String, String> userId
     ) {

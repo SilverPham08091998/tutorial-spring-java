@@ -9,7 +9,6 @@ import org.hibernate.annotations.CreationTimestamp;
 import javax.persistence.*;
 import java.util.Date;
 import java.util.List;
-import java.util.UUID;
 
 
 @Entity(name = "CATEGORY_PRODUCT")
@@ -22,7 +21,8 @@ public class CategoryProductEntity {
 
     @Id
     @Column(name = "CATEGORY_PRODUCT_ID")
-    private String categoryProductId = UUID.randomUUID().toString();
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long categoryProductId;
 
     @Column(name = "CATEGORY_PRODUCT_NAME")
     private String categoryProductName;
@@ -41,8 +41,8 @@ public class CategoryProductEntity {
     private Date modifiedDate;
 
     @ManyToOne
-    @JoinColumn(name = "CATEGORY_ORDER_ID")
-    private CategoryOrderEntity categoryOrderEntity;
+    @JoinColumn(name = "CATEGORY_ID")
+    private CategoryEntity categoryEntity;
 
     @OneToMany(mappedBy = "categoryProductEntity", cascade = CascadeType.ALL)
     private List<ProductEntity> productEntities;

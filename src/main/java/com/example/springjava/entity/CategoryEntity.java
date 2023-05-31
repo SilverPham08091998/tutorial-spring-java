@@ -10,24 +10,24 @@ import org.hibernate.annotations.CreationTimestamp;
 import javax.persistence.*;
 import java.util.Date;
 import java.util.List;
-import java.util.UUID;
 
 
-@Entity(name = "CATEGORY_ORDER")
-@Table(name = "CATEGORY_ORDER")
+@Entity(name = "CATEGORY")
+@Table(name = "CATEGORY")
 @AllArgsConstructor
 @NoArgsConstructor
 @Setter
 @Getter
-public class CategoryOrderEntity {
+public class CategoryEntity {
     @Id
-    @Column(name = "CATEGORY_ORDER_ID")
-    private String categoryOrderId = UUID.randomUUID().toString();
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "CATEGORY_ID")
+    private Long categoryId;
 
-    @Column(name = "CATEGORY_ORDER_NAME")
+    @Column(name = "CATEGORY_NAME")
     private String categoryOrderName;
 
-    @Column(name = "CATEGORY_ORDER_STATUS")
+    @Column(name = "CATEGORY_STATUS")
     private String categoryOrderStatus;
 
     @CreationTimestamp
@@ -40,10 +40,8 @@ public class CategoryOrderEntity {
     @Column(name = "MODIFIED_DATE")
     private Date modifiedDate;
 
-    @OneToMany(mappedBy = "categoryOrderEntity", cascade = CascadeType.ALL)
-    private List<OrderEntity> orderEntityList;
 
-    @OneToMany(mappedBy = "categoryOrderEntity", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "categoryEntity", cascade = CascadeType.ALL)
     private List<CategoryProductEntity> categoryProductEntities;
 
 

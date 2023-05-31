@@ -29,12 +29,12 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public ApiResponse<String> createProduct(ProductPayload.CreateProductPayload payload) {
-        CategoryProductEntity categoryProduct = categoryProductRepository.findCategoryProductEntityByCategoryProductId(payload.getCategoryProductId());
+        CategoryProductEntity categoryProduct = categoryProductRepository.findCategoryProductEntityByCategoryProductId(Long.valueOf(payload.getCategoryProductId()));
         ProductEntity product = new ProductEntity();
         product.setProductName(payload.getProductName());
         product.setProductStatus(payload.getProductStatus());
         product.setProductType(payload.getProductType());
-        product.setAmount(payload.getAmount());
+        product.setPrice(payload.getAmount());
         product.setQuantity(payload.getQuantity());
         product.setCategoryProductEntity(categoryProduct);
         productRepository.save(product);
@@ -43,7 +43,7 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public ApiResponse<List<ProductDTO>> getListProduct(String search, String filter, String categoryProductId) {
-        List<ProductEntity> entityList = productRepository.findProductEntitiesByCategoryProductEntity_CategoryProductId(categoryProductId);
+        List<ProductEntity> entityList = productRepository.findProductEntitiesByCategoryProductEntity_CategoryProductId(Long.valueOf(categoryProductId));
         List<ProductDTO> dtoList = new ArrayList<>();
         for (ProductEntity entity : entityList) {
             ProductDTO productDTO = modelMapper.map(entity, ProductDTO.class);

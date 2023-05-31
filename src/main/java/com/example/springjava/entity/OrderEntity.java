@@ -58,7 +58,7 @@ public class OrderEntity {
 
     @ManyToOne
     @JoinColumn(name = "CATEGORY_ORDER_ID")
-    private CategoryOrderEntity categoryOrderEntity;
+    private CategoryEntity categoryEntity;
 
     @OneToMany(mappedBy = "orderEntity", cascade = CascadeType.ALL)
     private List<OrderDetailEntity> orderDetailEntities;

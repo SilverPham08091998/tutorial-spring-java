@@ -59,4 +59,7 @@ public class AuthenciationEntity {
     @OneToMany(mappedBy = "authenciationEntity", cascade = CascadeType.ALL)
     private List<OrderEntity> orderList;
 
+    @OneToMany(mappedBy = "authenciationEntity", cascade = CascadeType.ALL)
+    private List<CouponEntity> couponList;
+
 }

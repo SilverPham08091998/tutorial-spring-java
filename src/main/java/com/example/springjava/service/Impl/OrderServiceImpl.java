@@ -2,14 +2,14 @@ package com.example.springjava.service.Impl;
 
 
 import com.example.springjava.entity.AuthenciationEntity;
-import com.example.springjava.entity.CategoryOrderEntity;
+import com.example.springjava.entity.CategoryEntity;
 import com.example.springjava.entity.OrderDetailEntity;
 import com.example.springjava.entity.OrderEntity;
 import com.example.springjava.model.*;
 import com.example.springjava.payload.request.OrderPayload;
 import com.example.springjava.payload.response.ApiResponse;
 import com.example.springjava.respository.AuthenciationRepository;
-import com.example.springjava.respository.CategoryOrderRepository;
+import com.example.springjava.respository.CategoryRepository;
 import com.example.springjava.respository.OrderDetailRepository;
 import com.example.springjava.respository.OrderRepository;
 import com.example.springjava.service.OrderService;
@@ -31,7 +31,7 @@ public class OrderServiceImpl implements OrderService {
     OrderRepository orderRepository;
 
     @Autowired
-    CategoryOrderRepository categoryOrderRepository;
+    CategoryRepository categoryOrderRepository;
 
     @Autowired
     AuthenciationRepository authenciationRepository;
@@ -44,7 +44,7 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public ApiResponse<String> createOrder(OrderPayload.CreateOrderPayload payload) {
-        CategoryOrderEntity categoryOrderEntity = categoryOrderRepository.findCategoryOrderEntityByCategoryOrderId(payload.getCategoryOrderId());
+        CategoryEntity categoryEntity = categoryOrderRepository.findCategoryEntitiesByCategoryId(Long.parseLong(payload.getCategoryOrderId()));
         AuthenciationEntity authenciationEntity = authenciationRepository.findAuthenciationEntityByUserId(payload.getUserId());
         long sum = 0;
         OrderEntity order = new OrderEntity();
@@ -52,7 +52,7 @@ public class OrderServiceImpl implements OrderService {
         order.setOrderStatus(payload.getOrderStatus());
         order.setDiscount(payload.getDiscount());
         order.setPaymentStatus(payload.getPaymentStatus());
-        order.setCategoryOrderEntity(categoryOrderEntity);
+        order.setCategoryEntity(categoryEntity);
         order.setAuthenciationEntity(authenciationEntity);
         OrderEntity orderEntity = orderRepository.save(order);
         for (ProductDTO productDTO : payload.getProductDTOList()) {
@@ -82,7 +82,7 @@ public class OrderServiceImpl implements OrderService {
         List<OrderDTO> orderDTOList = new ArrayList<>();
         for (OrderEntity orderEntity : orderEntityList) {
             OrderDTO orderDTO = modelMapper.map(orderEntity, OrderDTO.class);
-            orderDTO.setOrderType(orderEntity.getCategoryOrderEntity().getCategoryOrderName());
+            orderDTO.setOrderType(orderEntity.getCategoryEntity().getCategoryOrderName());
             List<OrderDetailDTO> orderDetailDTOList = Arrays.asList(modelMapper.map(orderEntity.getOrderDetailEntities(), OrderDetailDTO[].class));
             orderDTO.setOrderDetailDTOList(orderDetailDTOList);
             orderDTOList.add(orderDTO);
@@ -100,7 +100,7 @@ public class OrderServiceImpl implements OrderService {
         List<OrderDTO> orderDTOList = new ArrayList<>();
         for (OrderEntity orderEntity : orderEntityPage.getContent()) {
             OrderDTO orderDTO = modelMapper.map(orderEntity, OrderDTO.class);
-            orderDTO.setOrderType(orderEntity.getCategoryOrderEntity().getCategoryOrderName());
+            orderDTO.setOrderType(orderEntity.getCategoryEntity().getCategoryOrderName());
             List<OrderDetailDTO> orderDetailDTOList = Arrays.asList(modelMapper.map(orderEntity.getOrderDetailEntities(), OrderDetailDTO[].class));
             orderDTO.setOrderDetailDTOList(orderDetailDTOList);
             orderDTOList.add(orderDTO);

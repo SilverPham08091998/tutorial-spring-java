@@ -18,6 +18,7 @@ import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.ByteArrayInputStream;
@@ -36,6 +37,7 @@ public class FileController {
     OrderService orderService;
 
     @GetMapping(value = "/user/export-excel", produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
+    @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<Resource> exportExcelUser(
             @RequestParam(name = "fullName", required = false) String fullName,
             @RequestParam(name = "address", required = false) String address,

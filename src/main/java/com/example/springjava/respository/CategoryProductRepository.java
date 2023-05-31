@@ -7,8 +7,8 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface CategoryProductRepository extends JpaRepository<CategoryProductEntity, String> {
-    List<CategoryProductEntity> findCategoryProductEntitiesByCategoryOrderEntity_CategoryOrderId(String categoryOrderId);
+public interface CategoryProductRepository extends JpaRepository<CategoryProductEntity, Long> {
+    List<CategoryProductEntity> findCategoryProductEntityByCategoryEntity_CategoryId(Long categoryId);
 
-    CategoryProductEntity findCategoryProductEntityByCategoryProductId(String categoryProductId);
+    CategoryProductEntity findCategoryProductEntityByCategoryProductId(Long categoryProductId);
 }

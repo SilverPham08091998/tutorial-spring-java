@@ -9,7 +9,7 @@ import java.util.Date;
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
-public class CategoryOrderDTO {
+public class CategoryDTO {
     private String categoryOrderId;
 
     private String categoryOrderName;

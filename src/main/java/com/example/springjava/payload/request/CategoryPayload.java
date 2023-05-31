@@ -4,13 +4,13 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-public class CategoryOrderPayload {
+public class CategoryPayload {
 
 
     @AllArgsConstructor
     @NoArgsConstructor
     @Data
-    public static class CreateCategoryOrderPayload {
+    public static class CreateCategoryPayload {
         private String categoryName;
         private String categoryStatus;
 
@@ -20,8 +20,8 @@ public class CategoryOrderPayload {
     @AllArgsConstructor
     @NoArgsConstructor
     @Data
-    public static class UpdateCategoryOrderPayload {
-        private String categoryOrderId;
+    public static class UpdateCategoryPayload {
+        private String categoryId;
         private String categoryName;
         private String categoryStatus;
 
@@ -31,8 +31,8 @@ public class CategoryOrderPayload {
     @AllArgsConstructor
     @NoArgsConstructor
     @Data
-    public static class DeleteCategoryOrderPayload {
-        private String categoryOrderId;
+    public static class DeleteCategoryPayload {
+        private String categoryId;
 
 
     }

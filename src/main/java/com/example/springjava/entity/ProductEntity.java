@@ -9,7 +9,7 @@ import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
 import java.util.Date;
-import java.util.UUID;
+import java.util.List;
 
 @Entity(name = "PRODUCT")
 @Table(name = "PRODUCT")
@@ -18,10 +18,10 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ProductEntity {
-
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
-    @Column(name = "PRODUCT_ID")
-    private String productId = UUID.randomUUID().toString();
+    @Column(name = "PRODUCT_ID", updatable = false, nullable = false)
+    private Long productId;
 
     @Column(name = "PRODUCT_NAME")
     private String productName;
@@ -42,15 +42,37 @@ public class ProductEntity {
     @Column(name = "MODIFIED_DATE")
     private Date modifiedDate;
 
-    @Column(name = "AMOUNT")
-    private long amount;
+    @Column(name = "PRICE")
+    private long price;
 
     @Column(name = "QUANTITY")
     private long quantity;
+
+    @Column(name = "STOCK_AVAILABLE")
+    private boolean stockAvailable;
+
+    @Column(name = "THUMBNAIL")
+    private String thumbnail;
 
     @ManyToOne
     @JoinColumn(name = "CATEGORY_PRODUCT_ID")
     private CategoryProductEntity categoryProductEntity;
 
+    @OneToMany(mappedBy = "productEntity", cascade = CascadeType.ALL)
+    private List<PromotionEntity> promotionEntityList;
 
+    @OneToOne(mappedBy = "productEntity", cascade = CascadeType.ALL)
+    private ProductPhoneDetailEntity productPhoneDetailEntity;
+
+    @OneToOne(mappedBy = "productEntity", cascade = CascadeType.ALL)
+    private ProductMonitorDetailEntity productScreenDetailEntity;
+
+    @OneToOne(mappedBy = "productEntity", cascade = CascadeType.ALL)
+    private ProductLaptopDetailEntity productLaptopDetailEntity;
+
+    @OneToOne(mappedBy = "productEntity", cascade = CascadeType.ALL)
+    private ProductWatchDetailEntity productWatchDetailEntity;
+
+    @OneToOne(mappedBy = "productEntity", cascade = CascadeType.ALL)
+    private ProductHeadphoneEntity productHeadphoneEntity;
 }
