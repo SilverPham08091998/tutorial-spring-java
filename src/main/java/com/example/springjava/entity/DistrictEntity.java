@@ -19,14 +19,10 @@ import java.util.List;
 public class DistrictEntity {
     @Id
     @Column(name = "DISTRICT_ID")
-    private Long roleId;
-
-    @Column(name = "ID")
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Long districtId;
 
     @Column(name = "DISTRICT_NAME")
-    private String roleName;
+    private String districtName;
 
     @CreationTimestamp
     @Temporal(TemporalType.TIMESTAMP)

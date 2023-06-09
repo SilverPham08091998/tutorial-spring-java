@@ -19,14 +19,10 @@ import java.util.List;
 public class ProvinceEntity {
     @Id
     @Column(name = "PROVINCE_ID")
-    private Long roleId;
-
-    @Column(name = "ID")
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Long provinceId;
 
     @Column(name = "PROVINCE_NAME")
-    private String roleName;
+    private String provinceName;
 
     @CreationTimestamp
     @Temporal(TemporalType.TIMESTAMP)

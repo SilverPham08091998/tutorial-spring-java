@@ -9,7 +9,7 @@ import java.util.List;
 
 @Repository
 public interface OrderRepository extends JpaRepository<OrderEntity, Long>, JpaSpecificationExecutor<OrderEntity> {
-    List<OrderEntity> findOrderEntitiesByAuthenciationEntity_UserId(String userId);
+    List<OrderEntity> findOrderEntitiesByOrderId(String userId);
 
 
 }

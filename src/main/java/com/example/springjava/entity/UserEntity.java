@@ -66,4 +66,7 @@ public class UserEntity {
     @JoinColumn(name = "USER_ID")
     private AuthenciationEntity authenciationEntity;
 
+    @OneToOne(mappedBy = "userEntity", cascade = CascadeType.ALL)
+    private SupplierEntity supplierEntity;
+
 }

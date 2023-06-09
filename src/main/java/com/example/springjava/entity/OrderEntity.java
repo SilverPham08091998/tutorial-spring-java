@@ -9,7 +9,6 @@ import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
 import java.util.Date;
-import java.util.List;
 import java.util.UUID;
 
 @Entity(name = "ORDER_INFORMATION")
@@ -52,15 +51,15 @@ public class OrderEntity {
     @Column(name = "PAYMENT_STATUS")
     private String paymentStatus;
 
-    @ManyToOne
-    @JoinColumn(name = "USER_ID")
-    private AuthenciationEntity authenciationEntity;
-
-    @ManyToOne
-    @JoinColumn(name = "CATEGORY_ORDER_ID")
-    private CategoryEntity categoryEntity;
-
-    @OneToMany(mappedBy = "orderEntity", cascade = CascadeType.ALL)
-    private List<OrderDetailEntity> orderDetailEntities;
+//    @ManyToOne
+//    @JoinColumn(name = "USER_ID")
+//    private AuthenciationEntity authenciationEntity;
+//
+//    @ManyToOne
+//    @JoinColumn(name = "CATEGORY_ORDER_ID")
+//    private CategoryEntity categoryEntity;
+//
+//    @OneToMany(mappedBy = "orderEntity", cascade = CascadeType.ALL)
+//    private List<OrderDetailEntity> orderDetailEntities;
 
 }

@@ -7,7 +7,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
-import java.math.BigDecimal;
 import java.util.Date;
 
 @Entity(name = "PROMOTION")
@@ -17,26 +16,36 @@ import java.util.Date;
 @AllArgsConstructor
 @NoArgsConstructor
 public class PromotionEntity {
+
+    @OneToOne
+    @JoinColumn(name = "PROMOTION_TYPE_ID")
+    PromotionTypeEntity promotionTypeEntity;
+
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
     @Column(name = "PROMOTION_ID", updatable = false, nullable = false)
     private Long discountId;
 
-    @Column(name = "DISCOUNT_TYPE")
-    private String discountType;
+    @Column(name = "WORD_AMOUNT")
+    private String wordAmount;
 
     @Column(name = "AMOUNT")
-    private BigDecimal amount;
+    private String amount;
 
-    @Column(name = "EXPIRED_DATE")
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date expiredDate;
+    @Column(name = "DESCRIPTION")
+    private String description;
+
+    @Column(name = "TITLE")
+    private String title;
+
+    @Column(name = "STATUS")
+    private String status;
+
+    @Column(name = "PRODUCT_GIFT_ID")
+    private String productId;
 
     @Column(name = "CREATED_DATE")
     @Temporal(TemporalType.TIMESTAMP)
     private Date createdDate;
 
-    @ManyToOne
-    @JoinColumn(name = "PRODUCT_ID")
-    private ProductEntity productEntity;
 }

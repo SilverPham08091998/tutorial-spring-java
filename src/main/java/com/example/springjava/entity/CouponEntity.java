@@ -41,7 +41,4 @@ public class CouponEntity {
     @Temporal(TemporalType.TIMESTAMP)
     private Date createdDate;
 
-    @ManyToOne
-    @JoinColumn(name = "USER_ID")
-    private AuthenciationEntity authenciationEntity;
 }

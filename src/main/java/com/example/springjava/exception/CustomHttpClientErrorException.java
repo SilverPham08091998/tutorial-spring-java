@@ -5,6 +5,7 @@ import org.apache.logging.log4j.Logger;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+
 public class CustomHttpClientErrorException {
     private static final Logger logger = LogManager.getLogger(CustomHttpClientErrorException.class);
     private int status;

@@ -7,6 +7,7 @@ import org.springframework.web.client.HttpStatusCodeException;
 
 import java.nio.charset.Charset;
 
+
 public class HttpClientErrorException extends HttpStatusCodeException {
     private static final long serialVersionUID = 5177019431887513952L;
 

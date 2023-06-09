@@ -6,7 +6,6 @@ import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
 import java.util.Date;
-import java.util.List;
 import java.util.UUID;
 
 @Entity(name = "AUTHENCIATION")
@@ -53,13 +52,9 @@ public class AuthenciationEntity {
     @Column(name = "EMAIL")
     private String email;
 
+    @Column(name = "STATUS")
+    private String status;
+
     @OneToOne(mappedBy = "authenciationEntity", cascade = CascadeType.ALL)
     private UserEntity userEntity;
-
-    @OneToMany(mappedBy = "authenciationEntity", cascade = CascadeType.ALL)
-    private List<OrderEntity> orderList;
-
-    @OneToMany(mappedBy = "authenciationEntity", cascade = CascadeType.ALL)
-    private List<CouponEntity> couponList;
-
 }

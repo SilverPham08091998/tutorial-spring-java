@@ -3,6 +3,7 @@ package com.example.springjava.entity;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
@@ -14,27 +15,40 @@ import java.util.Date;
 @Setter
 public class DiscountEntity {
 
+    @OneToOne
+    @JoinColumn(name = "DISCOUNT_TYPE_ID")
+    DiscountTypeEntity discountTypeEntity;
+
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
     @Column(name = "DISCOUNT_ID", updatable = false, nullable = false)
     private Long discountId;
 
-    @Column(name = "DISCOUNT_TYPE")
-    private String discountType;
-
     @Column(name = "AMOUNT")
     private BigDecimal amount;
 
-    @Column(name = "EXPIRED_DATE")
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date expiredDate;
+    @Column(name = "WORD_AMOUNT")
+    private String wordAmount;
+
+    @Column(name = "QUANITY_PRODUCT")
+    private BigDecimal quantityProduct;
+
+    @Column(name = "DESCRIPTION")
+    private String description;
+
+    @Column(name = "TITLE")
+    private String title;
+
+    @Column(name = "STATUS")
+    private String status;
+
+    @Column(name = "PRODUCT_GIFT_ID")
+    private String productId;
 
     @Column(name = "CREATED_DATE")
+    @CreationTimestamp
     @Temporal(TemporalType.TIMESTAMP)
     private Date createdDate;
 
-    @ManyToOne
-    @JoinColumn(name = "RPOVINCE_ID")
-    private ProductEntity productEntity;
 
 }

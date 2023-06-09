@@ -21,7 +21,6 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 @Service
@@ -52,8 +51,6 @@ public class OrderServiceImpl implements OrderService {
         order.setOrderStatus(payload.getOrderStatus());
         order.setDiscount(payload.getDiscount());
         order.setPaymentStatus(payload.getPaymentStatus());
-        order.setCategoryEntity(categoryEntity);
-        order.setAuthenciationEntity(authenciationEntity);
         OrderEntity orderEntity = orderRepository.save(order);
         for (ProductDTO productDTO : payload.getProductDTOList()) {
             OrderDetailEntity orderDetailEntity = new OrderDetailEntity();
@@ -63,7 +60,6 @@ public class OrderServiceImpl implements OrderService {
             orderDetailEntity.setProductStatus(productDTO.getProductStatus());
             orderDetailEntity.setProductName(productDTO.getProductName());
             orderDetailEntity.setProductType(productDTO.getProductType());
-            orderDetailEntity.setOrderEntity(orderEntity);
             sum = sum + productDTO.getAmount();
             orderDetailRepository.save(orderDetailEntity);
         }
@@ -78,13 +74,11 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public List<OrderDTO> getListOrder(String search, String userId) {
-        List<OrderEntity> orderEntityList = orderRepository.findOrderEntitiesByAuthenciationEntity_UserId(userId);
+        List<OrderEntity> orderEntityList = orderRepository.findOrderEntitiesByOrderId(userId);
         List<OrderDTO> orderDTOList = new ArrayList<>();
         for (OrderEntity orderEntity : orderEntityList) {
             OrderDTO orderDTO = modelMapper.map(orderEntity, OrderDTO.class);
-            orderDTO.setOrderType(orderEntity.getCategoryEntity().getCategoryOrderName());
-            List<OrderDetailDTO> orderDetailDTOList = Arrays.asList(modelMapper.map(orderEntity.getOrderDetailEntities(), OrderDetailDTO[].class));
-            orderDTO.setOrderDetailDTOList(orderDetailDTOList);
+            orderDTO.setOrderType("");
             orderDTOList.add(orderDTO);
         }
         return orderDTOList;
@@ -100,9 +94,9 @@ public class OrderServiceImpl implements OrderService {
         List<OrderDTO> orderDTOList = new ArrayList<>();
         for (OrderEntity orderEntity : orderEntityPage.getContent()) {
             OrderDTO orderDTO = modelMapper.map(orderEntity, OrderDTO.class);
-            orderDTO.setOrderType(orderEntity.getCategoryEntity().getCategoryOrderName());
-            List<OrderDetailDTO> orderDetailDTOList = Arrays.asList(modelMapper.map(orderEntity.getOrderDetailEntities(), OrderDetailDTO[].class));
-            orderDTO.setOrderDetailDTOList(orderDetailDTOList);
+//            orderDTO.setOrderType(orderEntity.getCategoryEntity().getCategoryOrderName());
+//            List<OrderDetailDTO> orderDetailDTOList = Arrays.asList(modelMapper.map(orderEntity.getOrderDetailEntities(), OrderDetailDTO[].class));
+//            orderDTO.setOrderDetailDTOList(orderDetailDTOList);
             orderDTOList.add(orderDTO);
         }
         PaginationDTO<OrderDTO> orderDTOPaginationDTO = new PaginationDTO<>();

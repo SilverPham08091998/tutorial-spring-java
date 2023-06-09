@@ -18,14 +18,10 @@ import java.util.Date;
 public class WardEntity {
     @Id
     @Column(name = "WARD_ID")
-    private Long roleId;
-
-    @Column(name = "ID")
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Long wardId;
 
     @Column(name = "WARD_NAME")
-    private String roleName;
+    private String wardName;
 
     @CreationTimestamp
     @Temporal(TemporalType.TIMESTAMP)

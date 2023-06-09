@@ -54,18 +54,27 @@ public class ProductEntity {
     @Column(name = "THUMBNAIL")
     private String thumbnail;
 
+    @Column(name = "sold_quantity")
+    private long soldQuantity;
+
+    @Column(name = "rating")
+    private long rating;
+
     @ManyToOne
     @JoinColumn(name = "CATEGORY_PRODUCT_ID")
     private CategoryProductEntity categoryProductEntity;
 
     @OneToMany(mappedBy = "productEntity", cascade = CascadeType.ALL)
-    private List<PromotionEntity> promotionEntityList;
+    private List<ProductDiscountDetailEntity> productDiscountDetailEntityList;
+
+    @OneToMany(mappedBy = "productEntity", cascade = CascadeType.ALL)
+    private List<ProductPromotionDetailEntity> productPromotionDetailEntityList;
 
     @OneToOne(mappedBy = "productEntity", cascade = CascadeType.ALL)
     private ProductPhoneDetailEntity productPhoneDetailEntity;
 
     @OneToOne(mappedBy = "productEntity", cascade = CascadeType.ALL)
-    private ProductMonitorDetailEntity productScreenDetailEntity;
+    private ProductMonitorDetailEntity productMonitorDetailEntity;
 
     @OneToOne(mappedBy = "productEntity", cascade = CascadeType.ALL)
     private ProductLaptopDetailEntity productLaptopDetailEntity;

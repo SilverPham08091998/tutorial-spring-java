@@ -44,5 +44,9 @@ public class CategoryEntity {
     @OneToMany(mappedBy = "categoryEntity", cascade = CascadeType.ALL)
     private List<CategoryProductEntity> categoryProductEntities;
 
+    @ManyToOne
+    @JoinColumn(name = "SUPPLIER_ID")
+    private SupplierEntity supplierEntity;
+
 
 }
