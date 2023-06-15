@@ -27,7 +27,7 @@ public class OTPEntity {
 
     @Temporal(TemporalType.TIMESTAMP)
     @CreationTimestamp
-    @Column(name = "CREATED_ID")
+    @Column(name = "CREATED_DATE")
     private Date createdDate;
 
     @Column(name = "EXPIRED_DATE")

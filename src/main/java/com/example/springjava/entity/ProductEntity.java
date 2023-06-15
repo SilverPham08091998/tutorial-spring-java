@@ -84,4 +84,8 @@ public class ProductEntity {
 
     @OneToOne(mappedBy = "productEntity", cascade = CascadeType.ALL)
     private ProductHeadphoneEntity productHeadphoneEntity;
+
+    @ManyToOne
+    @JoinColumn(name = "SUPPLIER_ID")
+    private SupplierEntity supplierEntity;
 }

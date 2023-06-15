@@ -58,8 +58,6 @@ public class UserServiceImpl implements UserService {
         userEntity.setJob(userDTO.getJob());
         userEntity.setAge(userDTO.getAge());
         userEntity.setAddress(userDTO.getAddress());
-        userEntity.setRelation(userDTO.getRelation());
-        userEntity.setTitlePosition(userDTO.getTitlePosition());
         userEntity.setModifiedDate(new Date());
         userRepository.save(userEntity);
     }

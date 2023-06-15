@@ -38,9 +38,7 @@ public class JwtTokenProvider {
     public String generateAccessToken(String jti, UserPrincipal userPrincipal, Date now, Date expiryDate) {
         Claims claims = Jwts.claims().setSubject(userPrincipal.getUsername());
         claims.put("userId", userPrincipal.getUserId());
-        claims.put("email", userPrincipal.getEmail());
         claims.put("role", userPrincipal.getRole());
-        claims.put("phoneNumber", userPrincipal.getPhoneNumber());
         claims.put("authorities", userPrincipal.getAuthorities());
         claims.put("deviceId", userPrincipal.getDeviceId());
 
@@ -88,7 +86,7 @@ public class JwtTokenProvider {
             Claims body = decodeJwt(authToken);
             String username = body.getSubject();
             String deviceId = body.get("deviceId").toString();
-            AuthenciationEntity authenciationEntity = authenciationRepository.findAuthenciationEntityByUsernameAndAndDeviceId(username, deviceId);
+            AuthenciationEntity authenciationEntity = authenciationRepository.findAuthenciationEntityByUsernameAndDeviceId(username, deviceId);
             if (authenciationEntity == null) {
                 return false;
             }
@@ -173,8 +171,6 @@ public class JwtTokenProvider {
         entity.setAti(ati);
         entity.setTypeToken(typeToken);
         entity.setUserId(user.getUserId());
-        entity.setEmail(user.getEmail());
-        entity.setPhoneNumber(user.getPhoneNumber());
         entity.setExpireDate(expireDate);
         entity.setJwtActive(true);
         entity.setDeviceId(user.getDeviceId());

@@ -9,14 +9,14 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping(value = "/category/order")
+@RequestMapping(value = "/category")
 public class CategoryController {
 
     @Autowired
     CategoryService categoryService;
 
-    @GetMapping(value = "/list-order")
-    public ResponseEntity<ApiResponse<?>> getListCategoryOrder(
+    @GetMapping(value = "/list-category")
+    public ResponseEntity<ApiResponse<?>> getListCategory(
             @RequestParam(name = "search", required = false) String search,
             @RequestParam(name = "filter", required = false) String filter
     ) {
@@ -27,7 +27,7 @@ public class CategoryController {
         }
     }
 
-    @PostMapping(value = "/create-order")
+    @PostMapping(value = "/create-category")
     public ResponseEntity<ApiResponse<String>> createCategoryOrder(@RequestBody CategoryPayload.CreateCategoryPayload payload) {
         try {
             return ResponseEntity.ok(categoryService.createCategory(payload));
@@ -36,7 +36,7 @@ public class CategoryController {
         }
     }
 
-    @PutMapping(value = "/update-order")
+    @PutMapping(value = "/update-category")
     public ResponseEntity<ApiResponse<String>> updateCategoryOrder(@RequestBody CategoryPayload.UpdateCategoryPayload payload) {
         try {
             return ResponseEntity.ok(categoryService.updateCategory(payload));
@@ -45,7 +45,7 @@ public class CategoryController {
         }
     }
 
-    @DeleteMapping(value = "/delete")
+    @DeleteMapping(value = "/delete-category")
     public ResponseEntity<ApiResponse<String>> deleteCategoryOrder(@RequestBody CategoryPayload.DeleteCategoryPayload payload) {
         try {
             return ResponseEntity.ok(categoryService.deleteCategory(payload));

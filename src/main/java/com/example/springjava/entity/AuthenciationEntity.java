@@ -46,15 +46,24 @@ public class AuthenciationEntity {
     @Column(name = "ROLE", length = 64)
     private String role;
 
-    @Column(name = "PHONE_NUMBER")
-    private String phoneNumber;
+    @Temporal(TemporalType.TIMESTAMP)
+    @CreationTimestamp
+    @Column(name = "PASSWORD_CREATED_DATE")
+    private Date passwordCreatedDate;
 
-    @Column(name = "EMAIL")
-    private String email;
+    @Column(name = "WRONG_PASSWORD_DATE")
+    private Date wrongPasswordDate;
+
+    @Column(name = "WRONG_PASSWORD_COUNT")
+    private int wrongPasswordCount;
 
     @Column(name = "STATUS")
     private String status;
 
     @OneToOne(mappedBy = "authenciationEntity", cascade = CascadeType.ALL)
     private UserEntity userEntity;
+
+    @OneToOne
+    @JoinColumn(name = "ROLE_ID")
+    private RoleEntity roleEntity;
 }

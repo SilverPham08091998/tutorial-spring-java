@@ -92,4 +92,7 @@ public class SupplierEntity {
     @OneToMany(mappedBy = "supplierEntity", cascade = CascadeType.ALL)
     private List<CategoryEntity> categoryEntityList;
 
+    @OneToMany(mappedBy = "supplierEntity", cascade = CascadeType.ALL)
+    private List<ProductEntity> productEntityList;
+
 }

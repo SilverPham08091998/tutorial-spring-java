@@ -16,7 +16,5 @@ public class UserDetail {
     private String username;
     private String password;
     private String role;
-    private String phoneNumber;
-    private String email;
     private String deviceId;
 }

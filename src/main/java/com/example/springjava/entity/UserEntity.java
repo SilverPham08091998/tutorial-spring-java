@@ -5,6 +5,7 @@ import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
 import java.util.Date;
+import java.util.List;
 
 @Entity(name = "USER_PROFILE")
 @Table(name = "USER_PROFILE")
@@ -30,22 +31,25 @@ public class UserEntity {
     @Column(name = "ADDRESS")
     private String address;
 
+    @Column(name = "PROVINE_ID")
+    private long provinceId;
+
+    @Column(name = "DISTRICT_ID")
+    private long districtId;
+
+    @Column(name = "WARD_ID")
+    private long wardId;
+
     @Column(name = "AGE")
     private int age;
 
     @Column(name = "JOB")
     private String job;
 
-    @Column(name = "RELATION")
-    private String relation;
-
     @CreationTimestamp
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "MODIFIED_DATE")
     private Date modifiedDate;
-
-    @Column(name = "TITLE_POSITION")
-    private String titlePosition;
 
     @Column(name = "PHONE_NUMBER")
     private String phoneNumber;
@@ -61,6 +65,9 @@ public class UserEntity {
 
     @Column(name = "EXPERIED_DATE")
     private String experiedDate;
+    
+    @Column(name = "RELATIONSHIP")
+    private String relationShip;
 
     @OneToOne
     @JoinColumn(name = "USER_ID")
@@ -68,5 +75,13 @@ public class UserEntity {
 
     @OneToOne(mappedBy = "userEntity", cascade = CascadeType.ALL)
     private SupplierEntity supplierEntity;
+
+    @OneToMany(mappedBy = "userEntity", cascade = CascadeType.ALL)
+    private List<CouponTypeEntity> couponTypeEntityList;
+
+
+    @OneToMany(mappedBy = "userEntity", cascade = CascadeType.ALL)
+    private List<OrderDetailEntity> orderDetailEntityList;
+
 
 }

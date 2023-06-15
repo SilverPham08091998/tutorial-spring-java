@@ -25,8 +25,8 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     public ApiResponse<String> createCategory(CategoryPayload.CreateCategoryPayload payload) {
         CategoryEntity categoryEntity = new CategoryEntity();
-        categoryEntity.setCategoryOrderName(payload.getCategoryName());
-        categoryEntity.setCategoryOrderStatus(payload.getCategoryStatus());
+        categoryEntity.setCategoryName(payload.getCategoryName());
+        categoryEntity.setCategoryStatus(payload.getCategoryStatus());
         categoryOrderRepository.save(categoryEntity);
         return new ApiResponse<>(true, 200, "success", "Category is created");
     }
@@ -45,8 +45,8 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     public ApiResponse<String> updateCategory(CategoryPayload.UpdateCategoryPayload payload) {
         CategoryEntity entity = categoryOrderRepository.findCategoryEntitiesByCategoryId(Long.parseLong(payload.getCategoryId()));
-        entity.setCategoryOrderStatus(payload.getCategoryStatus());
-        entity.setCategoryOrderName(payload.getCategoryName());
+        entity.setCategoryName(payload.getCategoryStatus());
+        entity.setCategoryStatus(payload.getCategoryName());
         categoryOrderRepository.save(entity);
         return new ApiResponse<>(true, 200, "success", "Category is updated");
 

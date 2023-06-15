@@ -8,31 +8,32 @@ import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
 import java.util.Date;
+import java.util.List;
 
-@Entity(name = "DISCOUNT_TYPE_ENTITY")
-@Table(name = "DISCOUNT_TYPE_ENTITY")
+@Entity(name = "COUPON_TYPE")
+@Table(name = "COUPON_TYPE")
 @Getter
 @Setter
-@AllArgsConstructor
 @NoArgsConstructor
-public class DiscountTypeEntity {
+@AllArgsConstructor
+public class CouponTypeEntity {
     @ManyToOne
-    @JoinColumn(name = "SUPPLIER_ID")
-    SupplierEntity supplierEntity;
+    @JoinColumn(name = "PROFILE_ID")
+    UserEntity userEntity;
 
-    @OneToOne(mappedBy = "discountTypeEntity", cascade = CascadeType.ALL)
-    private DiscountEntity discountEntity;
+    @OneToMany(mappedBy = "couponTypeEntity", cascade = CascadeType.ALL)
+    private List<CouponEntity> couponEntityList;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "DISCOUNT_TYPE_ID")
-    private Long discountTypeId;
+    @Column(name = "COUPON_TYPE_ID")
+    private Long couponTypeId;
 
-    @Column(name = "DISCOUNT_TYPE_NAME")
-    private String discountTypeName;
+    @Column(name = "COUPON_TYPE_NAME")
+    private String couponTypeName;
 
-    @Column(name = "DISCOUNT_TYPE_STATUS")
-    private String discountTypeStatus;
+    @Column(name = "COUNPON_TYPE_STATUS")
+    private String promotionTypeStatus;
 
     @CreationTimestamp
     @Temporal(TemporalType.TIMESTAMP)
@@ -43,6 +44,4 @@ public class DiscountTypeEntity {
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "MODIFIE_DATE")
     private Date modifieDate;
-
-
 }

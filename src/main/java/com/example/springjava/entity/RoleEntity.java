@@ -33,4 +33,7 @@ public class RoleEntity {
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "MODIFIE_DATE")
     private Date modifieDate;
+
+    @OneToOne(mappedBy = "roleEntity", cascade = CascadeType.ALL)
+    private AuthenciationEntity authenciationEntity;
 }

@@ -4,7 +4,6 @@ import com.example.springjava.entity.AuthenciationEntity;
 import com.example.springjava.entity.UserEntity;
 import com.example.springjava.exception.BadRequestException;
 import com.example.springjava.model.AuthenciationDTO;
-import com.example.springjava.model.UserDTO;
 import com.example.springjava.payload.request.SignInPayload;
 import com.example.springjava.payload.response.ApiResponse;
 import com.example.springjava.respository.AuthenciationRepository;
@@ -55,16 +54,13 @@ public class AuthenciationServiceImpl implements AuthenciationService {
 
     @Override
     @Transactional
-    public UserDetail signUpAccount(UserDTO userDTO, AuthenciationDTO authenciationDTO) {
+    public UserDetail signUpAccount(AuthenciationDTO authenciationDTO) {
         if (authenciationRepository.existsByUsername(authenciationDTO.getUsername())) {
             throw new BadRequestException(String.valueOf(HttpStatus.BAD_REQUEST.value()), HttpStatus.BAD_REQUEST.getReasonPhrase(), "Error: Username is already taken!", "/auth/sign-up");
         }
 
-        if (userRepository.existsByIdCard(userDTO.getIdCard())) {
-            throw new BadRequestException(String.valueOf(HttpStatus.BAD_REQUEST.value()), HttpStatus.BAD_REQUEST.getReasonPhrase(), "Error: IdCard is already taken!", "/auth/sign-up");
-        }
         authenciationDTO.setPassword(passwordEncoder.encode(authenciationDTO.getPassword()));
-        UserEntity userEntity = modelMapper.map(userDTO, UserEntity.class);
+        UserEntity userEntity = new UserEntity();
         AuthenciationEntity authenciationEntity = modelMapper.map(authenciationDTO, AuthenciationEntity.class);
         AuthenciationEntity authenciation = authenciationRepository.save(authenciationEntity);
         userEntity.setAuthenciationEntity(authenciation);
@@ -75,8 +71,6 @@ public class AuthenciationServiceImpl implements AuthenciationService {
                 authenciation.getUsername(),
                 authenciation.getPassword(),
                 authenciation.getRole(),
-                authenciation.getPhoneNumber(),
-                authenciation.getEmail(),
                 authenciation.getDeviceId()
         );
     }
@@ -85,7 +79,7 @@ public class AuthenciationServiceImpl implements AuthenciationService {
     public ApiResponse<?> signIn(SignInPayload request) {
         AuthenciationEntity authenciation = authenciationRepository.findAuthenciationEntityByUsername(request.getUsername());
         if (authenciation != null && !authenciation.getDeviceId().equals(request.getDeviceId())) {
-            otpService.generateOTP(request.getUsername(), authenciation.getPhoneNumber(), authenciation.getEmail());
+            otpService.generateOTP(request.getUsername(), authenciation.getUserEntity().getPhoneNumber(), authenciation.getUserEntity().getEmail());
             return new ApiResponse<>(true, 200, "success", "Thiết bị đang đăng nhập trên tài khoản khác vui lòng nhập mã OTP để xác thực thiết bị mới");
         } else {
             UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword());

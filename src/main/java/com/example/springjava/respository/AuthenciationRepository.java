@@ -10,7 +10,7 @@ public interface AuthenciationRepository extends JpaRepository<AuthenciationEnti
 
     boolean existsByUsername(String username);
 
-    AuthenciationEntity findAuthenciationEntityByUsernameAndAndDeviceId(String username, String deviceId);
+    AuthenciationEntity findAuthenciationEntityByUsernameAndDeviceId(String username, String deviceId);
 
     AuthenciationEntity findAuthenciationEntityByUserId(String userId);
 

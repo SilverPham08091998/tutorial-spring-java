@@ -9,8 +9,8 @@ import java.util.List;
 
 @Repository
 public interface DistrictRepository extends JpaRepository<DistrictEntity, Long> {
-    DistrictEntity findDistrictEntityByDistrictId(Long districtId);
+    DistrictEntity findDistrictEntityByDistrictId(long districtId);
 
-    List<DistrictEntity> findDistrictEntitiesByProvinceEntity_ProvinceId(Long provinceId);
+    List<DistrictEntity> findDistrictEntitiesByProvinceEntity_ProvinceId(long provinceId);
 
 }

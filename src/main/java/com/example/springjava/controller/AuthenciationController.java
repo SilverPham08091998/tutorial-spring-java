@@ -2,8 +2,6 @@ package com.example.springjava.controller;
 
 
 import com.example.springjava.exception.BadRequestException;
-import com.example.springjava.model.AuthenciationDTO;
-import com.example.springjava.model.UserDTO;
 import com.example.springjava.payload.request.SignInPayload;
 import com.example.springjava.payload.request.SignUpPayload;
 import com.example.springjava.payload.response.ApiResponse;
@@ -54,19 +52,14 @@ public class AuthenciationController {
     @PostMapping(value = "/sign-up")
     public ResponseEntity<ApiResponse<AuthResponse>> signUpAccount(
             HttpServletRequest request,
-            @RequestBody SignUpPayload authenciationPayload) {
-        AuthenciationDTO authenciationDTO = authenciationPayload.getAuthenciationDTO();
-        UserDTO userDTO = authenciationPayload.getUserDTO();
+            @RequestBody SignUpPayload signUpPayload) {
 
-        if (authenciationDTO.getUsername().isEmpty() || authenciationDTO.getPassword().isEmpty()) {
+        if (signUpPayload.getUsername().isEmpty() || signUpPayload.getPassword().isEmpty()) {
             throw new BadRequestException(String.valueOf(HttpStatus.BAD_REQUEST.value()), HttpStatus.BAD_REQUEST.getReasonPhrase(), "Username or Password can not be empty", request.getServletPath());
         }
 
-        if (userDTO.getIdCard().isEmpty()) {
-            throw new BadRequestException(String.valueOf(HttpStatus.BAD_REQUEST.value()), HttpStatus.BAD_REQUEST.getReasonPhrase(), "CCCD can not be empty", request.getServletPath());
-        }
         try {
-            UserDetail userDetail = authenciationService.signUpAccount(userDTO, authenciationDTO);
+            UserDetail userDetail = authenciationService.signUpAccount(signUpPayload);
             UserPrincipal userPrincipal = UserPrincipal.create(userDetail);
             Authentication authentication = new UsernamePasswordAuthenticationToken(userPrincipal, null,
                     userPrincipal.getAuthorities());
@@ -83,6 +76,7 @@ public class AuthenciationController {
         try {
             return ResponseEntity.ok(authenciationService.signIn(request));
         } catch (Exception e) {
+            logger.error(e);
             throw e;
         }
     }

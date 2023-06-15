@@ -32,12 +32,6 @@ public class AuthenciationDTO {
     private String platform;
 
     @JsonProperty(value = "role")
-    private String role;
-
-    @JsonProperty(value = "phoneNumber")
-    private String phoneNumber;
-
-    @JsonProperty(value = "email")
-    private String email;
+    private Long role;
 
 }

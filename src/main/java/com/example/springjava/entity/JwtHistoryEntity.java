@@ -43,13 +43,6 @@ public class JwtHistoryEntity {
     @Column(name = "JWT_ACTIVE")
     private boolean jwtActive;
 
-    @Column(name = "PHONENUMBER", length = 256)
-    private String phoneNumber;
-
-
-    @Column(name = "EMAIL", length = 256)
-    private String email;
-
     @Column(name = "DEVICE_ID")
     private String deviceId;
 

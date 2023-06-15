@@ -13,6 +13,8 @@ import lombok.NoArgsConstructor;
 public class SignInPayload {
     private String username;
     private String password;
-
     private String deviceId;
+    private String longitude;
+    private String latitude;
+    private String platform;
 }

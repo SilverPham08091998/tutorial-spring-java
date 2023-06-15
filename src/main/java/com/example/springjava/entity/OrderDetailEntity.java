@@ -5,12 +5,11 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.CreationTimestamp;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
-import java.util.UUID;
+import javax.persistence.*;
+import java.util.Date;
+import java.util.List;
 
 @Entity(name = "ORDER_DETAIL")
 @Table(name = "ORDER_DETAIL")
@@ -21,28 +20,36 @@ import java.util.UUID;
 public class OrderDetailEntity {
 
     @Id
-    @Column(name = "ORDER_DETAIL_ID")
-    private String orderDetailId = UUID.randomUUID().toString();
+    @Column(name = "ORDER_ID", unique = true, updatable = false, nullable = false)
+    private Long orderId;
 
-    @Column(name = "PRODUCT_ID")
-    private String productId;
+    @Column(name = "ORDER_STATUS")
+    private String orderStatus;
 
-    @Column(name = "PRODUCT_NAME")
-    private String productName;
+    @CreationTimestamp
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "CREATE_DATE")
+    private Date createDate;
 
-    @Column(name = "PRODUCT_TYPE")
-    private String productType;
-
-    @Column(name = "PRODUCT_STATUS")
-    private String productStatus;
+    @CreationTimestamp
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "MODIFIED_DATE")
+    private Date modifiedDate;
 
     @Column(name = "AMOUNT")
     private long amount;
 
-    @Column(name = "QUANTITY")
-    private long quantity;
+    @Column(name = "TOTAL_AMOUNT")
+    private long totalAmount;
 
-//    @ManyToOne
-//    @JoinColumn(name = "ORDER_ID")
-//    private OrderEntity orderEntity;
+    @Column(name = "PAYMENT_STATUS")
+    private String paymentStatus;
+
+    @ManyToOne
+    @JoinColumn(name = "PRODILE_ID")
+    private UserEntity userEntity;
+
+    @OneToMany(mappedBy = "orderDetailEntity", cascade = CascadeType.ALL)
+    private List<OrderItemEntity> orderItemEntityList;
+
 }

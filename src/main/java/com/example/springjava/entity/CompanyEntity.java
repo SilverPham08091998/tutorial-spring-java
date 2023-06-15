@@ -39,6 +39,12 @@ public class CompanyEntity {
     @Column(name = "status")
     private String status;
 
+    @Column(name = "tax_code")
+    private String taxCode;
+
+    @Column(name = "address_tax")
+    private String addressTax;
+
     @CreationTimestamp
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "created_date")

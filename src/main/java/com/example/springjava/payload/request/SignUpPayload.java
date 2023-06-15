@@ -1,20 +1,14 @@
 package com.example.springjava.payload.request;
 
 import com.example.springjava.model.AuthenciationDTO;
-import com.example.springjava.model.UserDTO;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 
+@EqualsAndHashCode(callSuper = true)
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class SignUpPayload {
+public class SignUpPayload extends AuthenciationDTO {
 
-    AuthenciationDTO authenciationDTO;
-
-    UserDTO userDTO;
 }

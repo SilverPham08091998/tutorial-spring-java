@@ -25,10 +25,10 @@ public class CategoryEntity {
     private Long categoryId;
 
     @Column(name = "CATEGORY_NAME")
-    private String categoryOrderName;
+    private String categoryName;
 
     @Column(name = "CATEGORY_STATUS")
-    private String categoryOrderStatus;
+    private String categoryStatus;
 
     @CreationTimestamp
     @Temporal(TemporalType.TIMESTAMP)

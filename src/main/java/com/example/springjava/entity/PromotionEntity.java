@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -47,5 +48,15 @@ public class PromotionEntity {
     @Column(name = "CREATED_DATE")
     @Temporal(TemporalType.TIMESTAMP)
     private Date createdDate;
+
+    @Column(name = "EXPIRED_DATE")
+    @CreationTimestamp
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date expiredDate;
+
+    @Column(name = "MODIFIED_DATE")
+    @CreationTimestamp
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date modifiedDate;
 
 }

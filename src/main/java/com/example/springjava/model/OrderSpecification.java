@@ -1,7 +1,7 @@
 package com.example.springjava.model;
 
 import com.example.springjava.entity.AuthenciationEntity;
-import com.example.springjava.entity.OrderEntity;
+import com.example.springjava.entity.OrderDetailEntity;
 import org.springframework.data.jpa.domain.Specification;
 
 import javax.persistence.criteria.*;
@@ -11,7 +11,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
-public class OrderSpecification implements Specification<OrderEntity> {
+public class OrderSpecification implements Specification<OrderDetailEntity> {
 
     private final OrderFilter orderFilter;
 
@@ -20,21 +20,21 @@ public class OrderSpecification implements Specification<OrderEntity> {
     }
 
     @Override
-    public Specification<OrderEntity> and(Specification<OrderEntity> other) {
+    public Specification<OrderDetailEntity> and(Specification<OrderDetailEntity> other) {
         return Specification.super.and(other);
     }
 
     @Override
-    public Specification<OrderEntity> or(Specification<OrderEntity> other) {
+    public Specification<OrderDetailEntity> or(Specification<OrderDetailEntity> other) {
         return Specification.super.or(other);
     }
 
     @Override
-    public Predicate toPredicate(Root<OrderEntity> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) {
+    public Predicate toPredicate(Root<OrderDetailEntity> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) {
         List<Predicate> predicates = new ArrayList<>();
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
-        Join<OrderEntity, AuthenciationEntity> join = root.join("authenciationEntity");
+        Join<OrderDetailEntity, AuthenciationEntity> join = root.join("authenciationEntity");
         if (!orderFilter.getUserId().isEmpty()) {
             predicates.add(criteriaBuilder.and(criteriaBuilder.equal(join.get("userId"), orderFilter.getUserId())));
         }

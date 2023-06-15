@@ -43,8 +43,6 @@ public class CustomUserDetailServiceImpl implements UserDetailsService {
                     authenciation.getUsername(),
                     authenciation.getPassword(),
                     authenciation.getRole(),
-                    authenciation.getPhoneNumber(),
-                    authenciation.getEmail(),
                     authenciation.getDeviceId()
             );
             return UserPrincipal.create(userDetail);

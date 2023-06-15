@@ -50,5 +50,15 @@ public class DiscountEntity {
     @Temporal(TemporalType.TIMESTAMP)
     private Date createdDate;
 
+    @Column(name = "MODIFIED_DATE")
+    @CreationTimestamp
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date modifiedDate;
+
+    @Column(name = "EXPIRED_DATE")
+    @CreationTimestamp
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date expiredDate;
+
 
 }
