@@ -1,6 +1,7 @@
 package com.example.springjava.service.Impl;
 
 import com.example.springjava.entity.AuthenciationEntity;
+import com.example.springjava.entity.RoleEntity;
 import com.example.springjava.entity.UserEntity;
 import com.example.springjava.exception.BadRequestException;
 import com.example.springjava.model.AuthenciationDTO;
@@ -8,6 +9,7 @@ import com.example.springjava.payload.request.SignInPayload;
 import com.example.springjava.payload.response.ApiResponse;
 import com.example.springjava.respository.AuthenciationRepository;
 import com.example.springjava.respository.JwtHistoryRepository;
+import com.example.springjava.respository.RoleRepository;
 import com.example.springjava.respository.UserRepository;
 import com.example.springjava.security.JwtTokenProvider;
 import com.example.springjava.security.model.UserDetail;
@@ -23,6 +25,8 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Optional;
 
 
 @Service
@@ -50,6 +54,9 @@ public class AuthenciationServiceImpl implements AuthenciationService {
     JwtHistoryRepository jwtHistoryRepository;
 
     @Autowired
+    RoleRepository roleRepository;
+
+    @Autowired
     OTPService otpService;
 
     @Override
@@ -58,10 +65,15 @@ public class AuthenciationServiceImpl implements AuthenciationService {
         if (authenciationRepository.existsByUsername(authenciationDTO.getUsername())) {
             throw new BadRequestException(String.valueOf(HttpStatus.BAD_REQUEST.value()), HttpStatus.BAD_REQUEST.getReasonPhrase(), "Error: Username is already taken!", "/auth/sign-up");
         }
-
+        if (!roleRepository.existsById(authenciationDTO.getRole())) {
+            throw new BadRequestException(String.valueOf(HttpStatus.BAD_REQUEST.value()), HttpStatus.BAD_REQUEST.getReasonPhrase(), "Error: Role is not exist!", "/auth/sign-up");
+        }
+        Optional<RoleEntity> roleEntity = roleRepository.findById(authenciationDTO.getRole());
         authenciationDTO.setPassword(passwordEncoder.encode(authenciationDTO.getPassword()));
         UserEntity userEntity = new UserEntity();
         AuthenciationEntity authenciationEntity = modelMapper.map(authenciationDTO, AuthenciationEntity.class);
+        authenciationEntity.setRoleEntity(roleEntity.orElse(null));
+        authenciationEntity.setStatus("ACTIVE");
         AuthenciationEntity authenciation = authenciationRepository.save(authenciationEntity);
         userEntity.setAuthenciationEntity(authenciation);
         userRepository.save(userEntity);
@@ -70,7 +82,7 @@ public class AuthenciationServiceImpl implements AuthenciationService {
                 authenciation.getUserId(),
                 authenciation.getUsername(),
                 authenciation.getPassword(),
-                authenciation.getRole(),
+                authenciation.getRoleEntity().getRoleName(),
                 authenciation.getDeviceId()
         );
     }

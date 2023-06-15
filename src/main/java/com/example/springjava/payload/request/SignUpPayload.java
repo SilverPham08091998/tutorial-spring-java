@@ -1,14 +1,10 @@
 package com.example.springjava.payload.request;
 
 import com.example.springjava.model.AuthenciationDTO;
-import lombok.*;
+import lombok.EqualsAndHashCode;
 
 
 @EqualsAndHashCode(callSuper = true)
-@Data
-@Builder
-@NoArgsConstructor
-@AllArgsConstructor
 public class SignUpPayload extends AuthenciationDTO {
 
 }

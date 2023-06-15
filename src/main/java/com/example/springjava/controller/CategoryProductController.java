@@ -5,15 +5,21 @@ import com.example.springjava.model.CategoryProductDTO;
 import com.example.springjava.payload.request.CategoryProductPayload;
 import com.example.springjava.payload.response.ApiResponse;
 import com.example.springjava.service.CategoryProductService;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
 @RequestMapping(value = "/category/product")
+@PreAuthorize("hasAnyAuthority('SUPPLIER')")
 public class CategoryProductController {
+    private final Logger logger = LogManager.getLogger(CategoryProductController.class);
+
 
     @Autowired
     CategoryProductService categoryProductService;
@@ -27,6 +33,7 @@ public class CategoryProductController {
         try {
             return ResponseEntity.ok(categoryProductService.getListCategoryProduct(search, filter, categoryOrderId));
         } catch (Exception e) {
+            logger.error(e);
             throw e;
         }
     }
@@ -36,6 +43,8 @@ public class CategoryProductController {
         try {
             return ResponseEntity.ok(categoryProductService.createProductCategory(payload));
         } catch (Exception e) {
+            logger.error(e);
+
             throw e;
         }
     }
@@ -45,6 +54,7 @@ public class CategoryProductController {
         try {
             return ResponseEntity.ok(categoryProductService.updateProductCategory(payload));
         } catch (Exception e) {
+            logger.error(e);
             throw e;
         }
     }
@@ -54,6 +64,7 @@ public class CategoryProductController {
         try {
             return ResponseEntity.ok(categoryProductService.deleteCategoryProduct(payload));
         } catch (Exception e) {
+            logger.error(e);
             throw e;
         }
     }

@@ -4,6 +4,8 @@ import com.example.springjava.model.OrderFilter;
 import com.example.springjava.payload.request.OrderPayload;
 import com.example.springjava.payload.response.ApiResponse;
 import com.example.springjava.service.OrderService;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -14,6 +16,8 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping(value = "/order")
 public class OrderController {
+    private final Logger logger = LogManager.getLogger(OrderController.class);
+
 
     @Autowired
     OrderService orderService;
@@ -24,6 +28,7 @@ public class OrderController {
             return ResponseEntity.ok(orderService.createOrder(payload));
 
         } catch (Exception e) {
+            logger.error(e);
             throw e;
         }
     }
@@ -72,6 +77,7 @@ public class OrderController {
                     "success",
                     orderService.getListOrder(orderFilter, pageable)));
         } catch (Exception e) {
+            logger.error(e);
             throw e;
         }
     }

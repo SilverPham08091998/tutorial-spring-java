@@ -88,4 +88,18 @@ public class UserController {
         }
         return ResponseEntity.ok(new ApiResponse<>(true, 200, "success", "Delete success"));
     }
+
+    @PostMapping(value = "/role/create")
+    @Transactional
+    @PreAuthorize("hasAuthority('ADMIN')")
+    public ResponseEntity<ApiResponse<String>> createRole(
+            @RequestBody Map<String, String> roleName
+    ) {
+        try {
+            userService.createRole(roleName.get("roleName"));
+        } catch (Exception e) {
+            throw new BadRequestException(String.valueOf(HttpStatus.BAD_REQUEST.value()), HttpStatus.BAD_REQUEST.getReasonPhrase(), BadRequestException.class.getTypeName(), "UserId is invalid");
+        }
+        return ResponseEntity.ok(new ApiResponse<>(true, 200, "success", "Create Role success"));
+    }
 }

@@ -13,6 +13,11 @@ public interface UserService {
 
     void updateUser(String userId, UserDTO userDTO);
 
-
     void deleteUser(String userId);
+    
+    void createRole(String roleName);
+
+    void updateRole(long roleId);
+
+    void deleteRole(long roleId);
 }

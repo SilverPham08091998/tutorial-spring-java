@@ -13,7 +13,6 @@ public class CategoryPayload {
     public static class CreateCategoryPayload {
         private String categoryName;
         private String categoryStatus;
-
     }
 
 

@@ -43,9 +43,6 @@ public class AuthenciationEntity {
     @Column(name = "CREATE_DATE")
     private Date createdDate;
 
-    @Column(name = "ROLE", length = 64)
-    private String role;
-
     @Temporal(TemporalType.TIMESTAMP)
     @CreationTimestamp
     @Column(name = "PASSWORD_CREATED_DATE")
