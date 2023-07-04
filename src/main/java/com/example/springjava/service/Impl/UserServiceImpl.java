@@ -9,7 +9,6 @@ import com.example.springjava.respository.UserRepository;
 import com.example.springjava.service.UserService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -84,7 +83,7 @@ public class UserServiceImpl implements UserService {
     @Transactional
     public void createRole(String roleName) {
         if (roleRepository.existsByRoleName(roleName)) {
-            throw new BadRequestException(String.valueOf(HttpStatus.BAD_REQUEST.value()), HttpStatus.BAD_REQUEST.getReasonPhrase(), "RoleName is exist", "/role/create-role");
+            throw new BadRequestException("RoleName is exist");
         }
         RoleEntity roleEntity = new RoleEntity();
         roleEntity.setRoleName(roleName);

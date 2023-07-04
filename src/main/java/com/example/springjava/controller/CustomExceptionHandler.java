@@ -7,22 +7,37 @@ import com.example.springjava.exception.UnauthorizedException;
 import com.example.springjava.payload.response.ApiErrorResponse;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.cloud.sleuth.Tracer;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.client.HttpClientErrorException;
 
+import javax.servlet.http.HttpServletRequest;
+import java.util.Arrays;
+import java.util.Date;
+
+
 @RestControllerAdvice
-public class ExceptionHandler {
+public class CustomExceptionHandler {
     private static final ObjectMapper mapper = new ObjectMapper();
-    public final String system = "MOBILE_CX";
+    public final String system = "System";
+
+    private Tracer tracer;
 
 
-    @org.springframework.web.bind.annotation.ExceptionHandler(BadRequestException.class)
-    public ResponseEntity<ApiErrorResponse> handleApiBadRequestException(BadRequestException ex) {
-        ApiErrorResponse response = new ApiErrorResponse(ex.getStatus(), ex.getError(),
-                ex.getMessage(), ex.getPath());
-        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+    @ExceptionHandler(BadRequestException.class)
+    public ResponseEntity<ApiErrorResponse> handleApiBadRequestException(BadRequestException ex, HttpServletRequest request) {
+        String trace = ex.getErrorMessage() + " - " + Arrays.toString(ex.getStackTrace()).replaceAll("[\\[\\]]", "");
+        ApiErrorResponse errorResponse = ApiErrorResponse.builder()
+                .message(ex.getErrorMessage())
+                .error(HttpStatus.BAD_REQUEST.getReasonPhrase())
+                .timestamp(new Date())
+                .path(request.getServletPath())
+                .trace(trace)
+                .build();
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
     }
 
     @org.springframework.web.bind.annotation.ExceptionHandler(ForbiddenException.class)

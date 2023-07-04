@@ -17,7 +17,6 @@ import com.example.springjava.service.AuthenciationService;
 import com.example.springjava.service.OTPService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -63,10 +62,10 @@ public class AuthenciationServiceImpl implements AuthenciationService {
     @Transactional
     public UserDetail signUpAccount(AuthenciationDTO authenciationDTO) {
         if (authenciationRepository.existsByUsername(authenciationDTO.getUsername())) {
-            throw new BadRequestException(String.valueOf(HttpStatus.BAD_REQUEST.value()), HttpStatus.BAD_REQUEST.getReasonPhrase(), "Error: Username is already taken!", "/auth/sign-up");
+            throw new BadRequestException("Error: Username is already taken!");
         }
         if (!roleRepository.existsById(authenciationDTO.getRole())) {
-            throw new BadRequestException(String.valueOf(HttpStatus.BAD_REQUEST.value()), HttpStatus.BAD_REQUEST.getReasonPhrase(), "Error: Role is not exist!", "/auth/sign-up");
+            throw new BadRequestException("Error: Role is not exist!");
         }
         Optional<RoleEntity> roleEntity = roleRepository.findById(authenciationDTO.getRole());
         authenciationDTO.setPassword(passwordEncoder.encode(authenciationDTO.getPassword()));

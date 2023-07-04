@@ -7,7 +7,6 @@ import com.example.springjava.payload.request.VerifyOTPPayload;
 import com.example.springjava.payload.response.ApiResponse;
 import com.example.springjava.service.OTPService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -25,7 +24,7 @@ public class OTPController {
     @PostMapping(value = "/verify")
     public ResponseEntity<ApiResponse<?>> verifyOTP(@RequestBody VerifyOTPPayload payload, HttpServletRequest request) {
         if (payload.getOtp().isEmpty()) {
-            throw new BadRequestException(String.valueOf(HttpStatus.BAD_REQUEST.value()), HttpStatus.BAD_REQUEST.getReasonPhrase(), "OTP can not be empty", request.getServletPath());
+            throw new BadRequestException("OTP can not be empty");
         }
         try {
             return ResponseEntity.ok(otpService.verifyOTP(payload));

@@ -7,7 +7,6 @@ import com.example.springjava.payload.response.ApiResponse;
 import com.example.springjava.service.UserService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.transaction.annotation.Transactional;
@@ -37,7 +36,7 @@ public class UserController {
     ) {
         List<UserDTO> userDTOList;
         if (fullName == null || address == null || job == null) {
-            throw new BadRequestException(String.valueOf(HttpStatus.BAD_REQUEST.value()), HttpStatus.BAD_REQUEST.getReasonPhrase(), BadRequestException.class.getTypeName(), "Params (fullName,address,job) are null");
+            throw new BadRequestException("Params (fullName,address,job) are null");
         }
         try {
             userDTOList = userService.getListUser(fullName, address, job);
@@ -55,7 +54,7 @@ public class UserController {
         try {
             userService.updateUser(payload.getUserId(), payload.getUserDTO());
         } catch (Exception e) {
-            throw new BadRequestException(String.valueOf(HttpStatus.BAD_REQUEST.value()), HttpStatus.BAD_REQUEST.getReasonPhrase(), BadRequestException.class.getTypeName(), "UserId is invalid");
+            throw new BadRequestException("UserId is invalid");
 
         }
         return ResponseEntity.ok(new ApiResponse<>(true, 200, "success", "Update success"));
@@ -69,7 +68,7 @@ public class UserController {
         try {
             userService.updateFullNameByUserId(body.get("userId").toString(), body.get("fullName").toString(), (int) body.get("age"));
         } catch (Exception e) {
-            throw new BadRequestException(String.valueOf(HttpStatus.BAD_REQUEST.value()), HttpStatus.BAD_REQUEST.getReasonPhrase(), BadRequestException.class.getTypeName(), "UserId is invalid");
+            throw new BadRequestException("UserId is invalid");
 
         }
         return ResponseEntity.ok(new ApiResponse<>(true, 200, "success", "Update Full Name success"));
@@ -84,7 +83,7 @@ public class UserController {
         try {
             userService.deleteUser(userId.get("userId"));
         } catch (Exception e) {
-            throw new BadRequestException(String.valueOf(HttpStatus.BAD_REQUEST.value()), HttpStatus.BAD_REQUEST.getReasonPhrase(), BadRequestException.class.getTypeName(), "UserId is invalid");
+            throw new BadRequestException("UserId is invalid");
         }
         return ResponseEntity.ok(new ApiResponse<>(true, 200, "success", "Delete success"));
     }
@@ -98,7 +97,7 @@ public class UserController {
         try {
             userService.createRole(roleName.get("roleName"));
         } catch (Exception e) {
-            throw new BadRequestException(String.valueOf(HttpStatus.BAD_REQUEST.value()), HttpStatus.BAD_REQUEST.getReasonPhrase(), BadRequestException.class.getTypeName(), "UserId is invalid");
+            throw new BadRequestException("UserId is invalid");
         }
         return ResponseEntity.ok(new ApiResponse<>(true, 200, "success", "Create Role success"));
     }

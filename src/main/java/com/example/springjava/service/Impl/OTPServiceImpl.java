@@ -12,7 +12,6 @@ import com.example.springjava.security.JwtTokenProvider;
 import com.example.springjava.service.OTPService;
 import com.example.springjava.util.function.GenarateOTP;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -60,15 +59,15 @@ public class OTPServiceImpl implements OTPService {
         Date now = new Date();
         OTPEntity otpEntity = otpRepository.findOTPEntityByUsernameAndMatching(payload.getUsername(), false);
         if (otpEntity.getCountWrongOTP() > 3) {
-            throw new BadRequestException(String.valueOf(HttpStatus.BAD_REQUEST.value()), HttpStatus.BAD_REQUEST.getReasonPhrase(), "You was entered OTP wrong", "/otp/verify");
+            throw new BadRequestException("You was entered OTP wrong");
         }
         if (!otpEntity.getOtp().equals(payload.getOtp())) {
             otpEntity.setCountWrongOTP(otpEntity.getCountWrongOTP() + 1);
             otpRepository.save(otpEntity);
-            throw new BadRequestException(String.valueOf(HttpStatus.BAD_REQUEST.value()), HttpStatus.BAD_REQUEST.getReasonPhrase(), "OTP invalid", "/otp/verify");
+            throw new BadRequestException("OTP invalid");
         }
         if (now.getTime() > otpEntity.getExpiredDate().getTime()) {
-            throw new BadRequestException(String.valueOf(HttpStatus.BAD_REQUEST.value()), HttpStatus.BAD_REQUEST.getReasonPhrase(), "OTP can be expire date", "/otp/verify");
+            throw new BadRequestException("OTP can be expire date");
         }
         otpEntity.setMatching(true);
         otpRepository.save(otpEntity);
@@ -88,7 +87,7 @@ public class OTPServiceImpl implements OTPService {
         Date now = new Date();
         OTPEntity otpEntity = otpRepository.findOTPEntityByUsernameAndMatching(username, false);
         if (otpEntity.getResendDate().getTime() > now.getTime()) {
-            throw new BadRequestException(String.valueOf(HttpStatus.BAD_REQUEST.value()), HttpStatus.BAD_REQUEST.getReasonPhrase(), "Resend OTP many request , please send again", "/otp/resend");
+            throw new BadRequestException("Resend OTP many request , please send again");
         }
         String otp = GenarateOTP.generateOtp();
         otpEntity.setExpiredDate(new Date(now.getTime() + OTP_EXPIRATION_TIME));

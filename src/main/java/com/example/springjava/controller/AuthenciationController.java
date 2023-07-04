@@ -14,7 +14,6 @@ import com.example.springjava.service.AuthenciationService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -55,7 +54,7 @@ public class AuthenciationController {
             @RequestBody SignUpPayload signUpPayload) {
 
         if (signUpPayload.getUsername().isEmpty() || signUpPayload.getPassword().isEmpty()) {
-            throw new BadRequestException(String.valueOf(HttpStatus.BAD_REQUEST.value()), HttpStatus.BAD_REQUEST.getReasonPhrase(), "Username or Password can not be empty", request.getServletPath());
+            throw new BadRequestException("Username or Password can not be empty");
         }
 
         try {
@@ -66,7 +65,7 @@ public class AuthenciationController {
             return ResponseEntity.ok(new ApiResponse<>(true, 200, "success", jwtTokenProvider.createAuthResponse(authentication)));
         } catch (Exception e) {
             BadRequestException.logger.error("Error occurred", e);
-            throw new BadRequestException(String.valueOf(HttpStatus.BAD_REQUEST.value()), HttpStatus.BAD_REQUEST.getReasonPhrase(), "Duplicate username or idCard", request.getServletPath());
+            throw new BadRequestException("Duplicate username or idCard");
         }
     }
 
