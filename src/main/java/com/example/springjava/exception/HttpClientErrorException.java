@@ -1,5 +1,7 @@
 package com.example.springjava.exception;
 
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.lang.Nullable;
@@ -7,24 +9,36 @@ import org.springframework.web.client.HttpStatusCodeException;
 
 import java.nio.charset.Charset;
 
-
+@Getter
+@Setter
 public class HttpClientErrorException extends HttpStatusCodeException {
     private static final long serialVersionUID = 5177019431887513952L;
+    private final String errorMessage;
 
-    public HttpClientErrorException(HttpStatus statusCode) {
+    public HttpClientErrorException(HttpStatus statusCode, String errorMessage) {
         super(statusCode);
+        this.errorMessage = errorMessage;
     }
 
-    public HttpClientErrorException(HttpStatus statusCode, String statusText) {
+
+    public HttpClientErrorException(HttpStatus statusCode, String statusText, String errorMessage) {
         super(statusCode, statusText);
+        this.errorMessage = errorMessage;
     }
 
-    public HttpClientErrorException(HttpStatus statusCode, String statusText, @Nullable byte[] body, @Nullable Charset responseCharset) {
-        super(statusCode, statusText, body, responseCharset);
+    public HttpClientErrorException(HttpStatus statusCode, String statusText, byte[] responseBody, Charset responseCharset, String errorMessage) {
+        super(statusCode, statusText, responseBody, responseCharset);
+        this.errorMessage = errorMessage;
     }
 
-    public HttpClientErrorException(HttpStatus statusCode, String statusText, @Nullable HttpHeaders headers, @Nullable byte[] body, @Nullable Charset responseCharset) {
-        super(statusCode, statusText, headers, body, responseCharset);
+    public HttpClientErrorException(HttpStatus statusCode, String statusText, HttpHeaders responseHeaders, byte[] responseBody, Charset responseCharset, String errorMessage) {
+        super(statusCode, statusText, responseHeaders, responseBody, responseCharset);
+        this.errorMessage = errorMessage;
+    }
+
+    public HttpClientErrorException(String message, HttpStatus statusCode, String statusText, HttpHeaders responseHeaders, byte[] responseBody, Charset responseCharset, String errorMessage) {
+        super(message, statusCode, statusText, responseHeaders, responseBody, responseCharset);
+        this.errorMessage = errorMessage;
     }
 
     public static org.springframework.web.client.HttpClientErrorException create(HttpStatus statusCode, String statusText, HttpHeaders headers, byte[] body, @Nullable Charset charset) {

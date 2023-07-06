@@ -3,16 +3,13 @@ package com.example.springjava.controller;
 
 import com.example.springjava.exception.BadRequestException;
 import com.example.springjava.exception.ForbiddenException;
+import com.example.springjava.exception.HttpClientErrorException;
 import com.example.springjava.exception.UnauthorizedException;
 import com.example.springjava.payload.response.ApiErrorResponse;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import org.springframework.cloud.sleuth.Tracer;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-import org.springframework.web.client.HttpClientErrorException;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Arrays;
@@ -21,17 +18,12 @@ import java.util.Date;
 
 @RestControllerAdvice
 public class CustomExceptionHandler {
-    private static final ObjectMapper mapper = new ObjectMapper();
-    public final String system = "System";
-
-    private Tracer tracer;
-
-
     @ExceptionHandler(BadRequestException.class)
     public ResponseEntity<ApiErrorResponse> handleApiBadRequestException(BadRequestException ex, HttpServletRequest request) {
         String trace = ex.getErrorMessage() + " - " + Arrays.toString(ex.getStackTrace()).replaceAll("[\\[\\]]", "");
         ApiErrorResponse errorResponse = ApiErrorResponse.builder()
                 .message(ex.getErrorMessage())
+                .status(HttpStatus.BAD_REQUEST.value())
                 .error(HttpStatus.BAD_REQUEST.getReasonPhrase())
                 .timestamp(new Date())
                 .path(request.getServletPath())
@@ -40,71 +32,96 @@ public class CustomExceptionHandler {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
     }
 
-    @org.springframework.web.bind.annotation.ExceptionHandler(ForbiddenException.class)
-    public ResponseEntity<ApiErrorResponse> handleForbiddenException(ForbiddenException ex) {
-        ApiErrorResponse response = new ApiErrorResponse(ex.getStatus(), ex.getError(),
-                ex.getMessage(), ex.getPath());
-        return new ResponseEntity<>(response, HttpStatus.FORBIDDEN);
+    @ExceptionHandler(ForbiddenException.class)
+    public ResponseEntity<ApiErrorResponse> handleForbiddenException(ForbiddenException ex, HttpServletRequest request) {
+        String trace = ex.getErrorMessage() + " - " + Arrays.toString(ex.getStackTrace()).replaceAll("[\\[\\]]", "");
+        ApiErrorResponse errorResponse = ApiErrorResponse.builder()
+                .message(ex.getErrorMessage())
+                .error(HttpStatus.FORBIDDEN.getReasonPhrase())
+                .status(HttpStatus.FORBIDDEN.value())
+                .timestamp(new Date())
+                .path(request.getServletPath())
+                .trace(trace)
+                .build();
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(errorResponse);
     }
 
-    @org.springframework.web.bind.annotation.ExceptionHandler(UnauthorizedException.class)
-    public ResponseEntity<ApiErrorResponse> handleUnauthrizationException(UnauthorizedException ex) {
-        ApiErrorResponse response = new ApiErrorResponse(ex.getStatus(), ex.getError(),
-                ex.getMessage(), ex.getPath());
-        return new ResponseEntity<>(response, HttpStatus.UNAUTHORIZED);
+    @ExceptionHandler(UnauthorizedException.class)
+    public ResponseEntity<ApiErrorResponse> handleUnauthrizationException(UnauthorizedException ex, HttpServletRequest request) {
+        String trace = ex.getErrorMessage() + " - " + Arrays.toString(ex.getStackTrace()).replaceAll("[\\[\\]]", "");
+        ApiErrorResponse errorResponse = ApiErrorResponse.builder()
+                .message(ex.getErrorMessage())
+                .error(HttpStatus.UNAUTHORIZED.getReasonPhrase())
+                .status(HttpStatus.UNAUTHORIZED.value())
+                .timestamp(new Date())
+                .path(request.getServletPath())
+                .trace(trace)
+                .build();
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(errorResponse);
     }
 
-    @org.springframework.web.bind.annotation.ExceptionHandler(HttpClientErrorException.class)
-    public ResponseEntity<JsonNode> handleApiExceptionException(HttpClientErrorException e) {
-        return redirectHttpClientErrorException(e);
+    @ExceptionHandler(HttpClientErrorException.class)
+    public ResponseEntity<ApiErrorResponse> handleApiExceptionException(HttpClientErrorException exception, HttpServletRequest request) {
+        return redirectHttpClientErrorException(exception, request);
     }
 
-    private String getValueFromResponse(JsonNode bodyObject, String key) {
-        return bodyObject.has(key) ? bodyObject.get(key).asText() : null;
-    }
-
-    private ResponseEntity<JsonNode> redirectHttpClientErrorException(HttpClientErrorException e) {
-        String description = null;
-        String message = null;
-        JsonNode bodyObject = null;
-        try {
-            bodyObject = mapper.readTree(e.getResponseBodyAsString());
-            description = getValueFromResponse(bodyObject, "description");
-            message = getValueFromResponse(bodyObject, "message");
-        } catch (Exception e3) {
-            try {
-                description = "HttpClientErrorException: " + e.getResponseBodyAsString();
-            } catch (Exception e1) {
-                description = "HttpClientErrorException: " + e;
-            }
-        }
-
-        JsonNode response = mapper.valueToTree(new ApiErrorResponse(e.getStatusCode().toString(), message,
-                message, description));
-
-        switch (e.getStatusCode()) {
+    private ResponseEntity<ApiErrorResponse> redirectHttpClientErrorException(HttpClientErrorException ex, HttpServletRequest request) {
+        String trace = ex.getErrorMessage() + " - " + Arrays.toString(ex.getStackTrace()).replaceAll("[\\[\\]]", "");
+        ApiErrorResponse errorResponse = ApiErrorResponse.builder()
+                .message(ex.getErrorMessage())
+                .timestamp(new Date())
+                .path(request.getServletPath())
+                .trace(trace)
+                .build();
+        switch (ex.getStatusCode()) {
             case BAD_REQUEST:
-                return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+                errorResponse.setError(HttpStatus.BAD_REQUEST.getReasonPhrase());
+                errorResponse.setStatus(HttpStatus.BAD_REQUEST.value());
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
             case CONFLICT:
-                return new ResponseEntity<>(response, HttpStatus.CONFLICT);
+                errorResponse.setError(HttpStatus.CONFLICT.getReasonPhrase());
+                errorResponse.setStatus(HttpStatus.CONFLICT.value());
+                return ResponseEntity.status(HttpStatus.CONFLICT).body(errorResponse);
             case EXPECTATION_FAILED:
-                return new ResponseEntity<>(response, HttpStatus.EXPECTATION_FAILED);
+                errorResponse.setError(HttpStatus.EXPECTATION_FAILED.getReasonPhrase());
+                errorResponse.setStatus(HttpStatus.EXPECTATION_FAILED.value());
+                return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).body(errorResponse);
             case FORBIDDEN:
-                return new ResponseEntity<>(response, HttpStatus.FORBIDDEN);
+                errorResponse.setError(HttpStatus.FORBIDDEN.getReasonPhrase());
+                errorResponse.setStatus(HttpStatus.FORBIDDEN.value());
+                return ResponseEntity.status(HttpStatus.FORBIDDEN).body(errorResponse);
             case LOCKED:
-                return new ResponseEntity<>(response, HttpStatus.LOCKED);
+                errorResponse.setError(HttpStatus.LOCKED.getReasonPhrase());
+                errorResponse.setStatus(HttpStatus.LOCKED.value());
+                return ResponseEntity.status(HttpStatus.LOCKED).body(errorResponse);
             case REQUEST_TIMEOUT:
-                return new ResponseEntity<>(response, HttpStatus.REQUEST_TIMEOUT);
+                errorResponse.setError(HttpStatus.REQUEST_TIMEOUT.getReasonPhrase());
+                errorResponse.setStatus(HttpStatus.REQUEST_TIMEOUT.value());
+                return ResponseEntity.status(HttpStatus.REQUEST_TIMEOUT).body(errorResponse);
             case NOT_FOUND:
-                return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
+                errorResponse.setError(HttpStatus.NO_CONTENT.getReasonPhrase());
+                errorResponse.setStatus(HttpStatus.NO_CONTENT.value());
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
             case TOO_MANY_REQUESTS:
-                return new ResponseEntity<>(response, HttpStatus.TOO_MANY_REQUESTS);
+                errorResponse.setError(HttpStatus.TOO_MANY_REQUESTS.getReasonPhrase());
+                errorResponse.setStatus(HttpStatus.TOO_MANY_REQUESTS.value());
+                return ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS).body(errorResponse);
             case UNAUTHORIZED:
-                return new ResponseEntity<>(response, HttpStatus.UNAUTHORIZED);
+                errorResponse.setError(HttpStatus.UNAUTHORIZED.getReasonPhrase());
+                errorResponse.setStatus(HttpStatus.UNAUTHORIZED.value());
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(errorResponse);
             case FAILED_DEPENDENCY:
-                return new ResponseEntity<>(response, HttpStatus.FAILED_DEPENDENCY);
+                errorResponse.setError(HttpStatus.FAILED_DEPENDENCY.getReasonPhrase());
+                errorResponse.setStatus(HttpStatus.FAILED_DEPENDENCY.value());
+                return ResponseEntity.status(HttpStatus.FAILED_DEPENDENCY).body(errorResponse);
+            case NOT_ACCEPTABLE:
+                errorResponse.setError(HttpStatus.NOT_ACCEPTABLE.getReasonPhrase());
+                errorResponse.setStatus(HttpStatus.NOT_ACCEPTABLE.value());
+                return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(errorResponse);
             default:
-                throw e;
+                errorResponse.setError(ex.getStatusCode().getReasonPhrase());
+                errorResponse.setStatus(ex.getStatusCode().value());
+                return ResponseEntity.status(ex.getStatusCode()).body(errorResponse);
         }
     }
 

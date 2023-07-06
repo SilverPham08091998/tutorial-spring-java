@@ -1,12 +1,13 @@
 package com.example.springjava.controller;
 
 
-import com.example.springjava.exception.BadRequestException;
+import com.example.springjava.exception.HttpClientErrorException;
 import com.example.springjava.payload.request.ResendOTPPayload;
 import com.example.springjava.payload.request.VerifyOTPPayload;
 import com.example.springjava.payload.response.ApiResponse;
 import com.example.springjava.service.OTPService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -24,7 +25,7 @@ public class OTPController {
     @PostMapping(value = "/verify")
     public ResponseEntity<ApiResponse<?>> verifyOTP(@RequestBody VerifyOTPPayload payload, HttpServletRequest request) {
         if (payload.getOtp().isEmpty()) {
-            throw new BadRequestException("OTP can not be empty");
+            throw new HttpClientErrorException(HttpStatus.UNSUPPORTED_MEDIA_TYPE, "OTP is not empty");
         }
         try {
             return ResponseEntity.ok(otpService.verifyOTP(payload));

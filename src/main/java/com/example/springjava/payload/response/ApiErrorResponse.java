@@ -1,5 +1,6 @@
 package com.example.springjava.payload.response;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -15,8 +16,8 @@ import java.util.Date;
 public class ApiErrorResponse {
     private static final long serialVersionUID = 7664785096389091489L;
 
-    @JsonProperty("status")
-    private String status;
+    @JsonProperty("statusCode")
+    private int status;
 
     @JsonProperty("error")
     private String error;
@@ -33,12 +34,8 @@ public class ApiErrorResponse {
     @JsonProperty("trace")
     private String trace;
 
+    @JsonProperty("metaData")
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    private String metaData;
 
-    public ApiErrorResponse(String status, String error, String message, String path) {
-        this.status = status;
-        this.error = error;
-        this.message = message;
-        this.path = path;
-        this.timestamp = new Date();
-    }
 }

@@ -65,7 +65,7 @@ public class UserEntity {
 
     @Column(name = "EXPERIED_DATE")
     private String experiedDate;
-    
+
     @Column(name = "RELATIONSHIP")
     private String relationShip;
 
@@ -78,10 +78,12 @@ public class UserEntity {
 
     @OneToMany(mappedBy = "userEntity", cascade = CascadeType.ALL)
     private List<CouponTypeEntity> couponTypeEntityList;
-
-
+    
     @OneToMany(mappedBy = "userEntity", cascade = CascadeType.ALL)
     private List<OrderDetailEntity> orderDetailEntityList;
+
+    @OneToOne(mappedBy = "userEntity", cascade = CascadeType.ALL)
+    private CartEntity cartEntity;
 
 
 }
